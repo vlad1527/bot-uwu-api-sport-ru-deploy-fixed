@@ -12,7 +12,16 @@ async function getSports(){const d=await apiFetch('/sport');return toArray(d,['s
 async function getBasketballSlugs(){let detected=[];try{detected=(await getSports()).filter(s=>norm([s.slug,s.name,s.title,s.translations?.ru,s.translations?.en].filter(Boolean).join(' ')).includes('basket')).map(s=>String(s.slug||s.key||s.name||s.id)).filter(Boolean)}catch{}return[...new Set(['basketball','basketball3x3','basketball-3x3','basket'].concat(detected))]}
 function league(m){return[pick(m,['category.name','country.name','sport.name'],''),pick(m,['tournament.name','tournament.title','league.name','competition.name','leagueName'],'')].filter(Boolean).join(' ')}
 function team(m,side){return pick(m,side==='home'?['homeTeam.name','home.name','teams.home.name','participants.0.name','competitors.0.name']:['awayTeam.name','away.name','teams.away.name','participants.1.name','competitors.1.name'],'')}
-function isIpbl(m){const x=norm(league(m));return x.includes('ipbl')||x.includes('prime')||x.includes('pro')}
+
+function isAllowedIpblDivision(m){
+  const text = norm(league(m));
+  const isIpblLeague = text.includes('ipbl') || text.includes('ибпл');
+  const isPrimeOrPro = text.includes('prime division') || text.includes('pro division') || text.includes('prime') || text.includes('pro');
+  const isMenOrWomen = text.includes('men') || text.includes('women') || text.includes('муж') || text.includes('жен') || text.includes('мужчины') || text.includes('женщины') || true;
+  return isIpblLeague && isPrimeOrPro && isMenOrWomen;
+}
+
+function isIpbl(m){return isAllowedIpblDivision(m)}
 function isPrime(m){return norm(league(m)).includes('prime')}
 function isPro(m){return norm(league(m)).includes('pro')}
 function targetPrime(a,b){const t=norm(a+' '+b);return PRIME_TEAMS.some(x=>t.includes(norm(x)))}
@@ -20,13 +29,26 @@ function parseNum(v){if(v===undefined||v===null||v==='')return NaN;if(typeof v==
 function source(m){return pick(m,['url','link','sourceUrl','eventUrl','matchUrl','betcityUrl'],'https://api.api-sport.ru/v2/docs/')}
 function status(m){return pick(m,['status','phase','state','status.name'],'live')}
 function period(m){return pick(m,['period','quarter','currentPeriod','status.period'],'LIVE')}
-function score(m){return pick(m,['score','currentScore','scores.current','fullScore'],'API не дал счёт')}
+function score(m){
+ const direct=pick(m,['score','currentScore','scores.current','fullScore','current_score'],'');
+ if(direct) return direct;
+ const h=pick(m,['homeScore.current','scores.home.current','score.home','home.score','homeScore.total','scores.home.total'],'');
+ const a=pick(m,['awayScore.current','scores.away.current','score.away','away.score','awayScore.total','scores.away.total'],'');
+ if(h!==''&&a!=='') return `${h}:${a}`;
+ return 'API не дал счёт';
+}
+function isActiveLiveMatch(m){
+ const s=norm(status(m));
+ const p=norm(period(m));
+ if(s.includes('not')||s.includes('scheduled')||s.includes('pre')||s.includes('finished')||s.includes('ended')||s.includes('заверш')) return false;
+ return s.includes('live')||s.includes('playing')||s.includes('inprogress')||s.includes('in progress')||s.includes('идет')||s.includes('игра')||p.includes('live')||/[1-4]\s*q/.test(p)||/quarter/.test(p)||/четвер/.test(p);
+}
 function markets(m){const out=[];const groups=[pick(m,['markets']),pick(m,['odds']),pick(m,['bets']),pick(m,['lines'])].filter(Array.isArray);for(const g of groups){for(const x of g){const raw=[x.type,x.name,x.title,x.marketName,x.selectionName].filter(Boolean).join(' ');const n=norm(raw);let type='';if(n.includes('under')||n.includes('tm')||n.includes('тм')||n.includes('меньше'))type='TM';if(n.includes('over')||n.includes('tb')||n.includes('тб')||n.includes('больше'))type='TB';const line=parseNum(pick(x,['line','total','value','name','title']));if(type&&Number.isFinite(line))out.push({type,line,odds:parseNum(pick(x,['odds','price','coefficient'],1.75))||1.75})}}return out}
 function scorePeriods(m){const out=[];const arrs=[pick(m,['periods']),pick(m,['quarters']),pick(m,['scores.periods']),pick(m,['score.periods']),pick(m,['periodScores']),pick(m,['period_scores'])].filter(Array.isArray);for(const arr of arrs){arr.slice(0,3).forEach((p,i)=>{let h=parseNum(pick(p,['home','homeScore','h','scoreHome','home_score'])),a=parseNum(pick(p,['away','awayScore','a','scoreAway','away_score']));const st=pick(p,['score','value','result'],'');const mm=String(st).match(/(\d+)\s*[:-]\s*(\d+)/);if((!Number.isFinite(h)||!Number.isFinite(a))&&mm){h=Number(mm[1]);a=Number(mm[2])}if(Number.isFinite(h)&&Number.isFinite(a))out.push({quarter:parseNum(pick(p,['quarter','period','number'],i+1))||i+1,home:h,away:a})})}for(let q=1;q<=3;q++){const h=parseNum(pick(m,[`scores.home.q${q}`,`scores.home.quarter${q}`,`homeScore.q${q}`,`q${q}Home`,`period${q}.home`]));const a=parseNum(pick(m,[`scores.away.q${q}`,`scores.away.quarter${q}`,`awayScore.q${q}`,`q${q}Away`,`period${q}.away`]));if(Number.isFinite(h)&&Number.isFinite(a))out.push({quarter:q,home:h,away:a})}const mp=new Map();out.forEach(x=>{if(!mp.has(x.quarter))mp.set(x.quarter,x)});return[...mp.values()].sort((a,b)=>a.quarter-b.quarter)}
 function matchToRows(m){if(!isIpbl(m))return[];const prime=isPrime(m),pro=isPro(m);if(!prime&&!pro)return[];const a=team(m,'home'),b=team(m,'away');if(prime&&!targetPrime(a,b))return[];return scorePeriods(m).map(q=>{const line=prime?55:38.5,total=q.home+q.away;return{time:pick(m,['time','date','startTime','startTimestamp'],'—'),league:league(m),teamA:a||'—',teamB:b||'—',quarter:q.quarter,qScore:`${q.home}:${q.away}`,qTotal:total,target:prime?'ТБ55':'ТБ38.5',passed:total>line,sourceUrl:source(m)}})}
-function liveMatchInfo(m){const a=team(m,'home'),b=team(m,'away');return{id:pick(m,['id','matchId','eventId'],`${a}-${b}`),league:league(m)||'—',teamA:a||'—',teamB:b||'—',period:period(m),score:score(m),status:status(m),mskTime:mskNow(),sourceUrl:source(m)}}
+function liveMatchInfo(m){const a=team(m,'home'),b=team(m,'away');return{id:pick(m,['id','matchId','eventId'],`${a}-${b}`),league:league(m)||'—',teamA:a||'—',teamB:b||'—',period:period(m),score:score(m),status:status(m),mskTime:mskNow(),sourceUrl:source(m),isActive:isActiveLiveMatch(m)}}
 function primeSignal(m,line){if(!isIpbl(m)||!isPrime(m))return null;const a=team(m,'home'),b=team(m,'away');if(!targetPrime(a,b))return null;const mk=markets(m).find(x=>x.type==='TB'&&Math.abs(Number(x.line)-Number(line))<.01);if(!mk)return null;return{id:pick(m,['id','matchId','eventId'],`${a}-${b}`),league:league(m),teamA:a,teamB:b,period:period(m),score:score(m),total:line,odds:mk.odds,sourceUrl:source(m)}}
 function proMatch(m){if(!isIpbl(m)||!isPro(m))return null;const a=team(m,'home'),b=team(m,'away');return{id:pick(m,['id','matchId','eventId'],`${a}-${b}`),league:league(m),teamA:a||'—',teamB:b||'—',period:period(m),quarter:period(m),score:score(m),status:status(m),isLive:norm(status(m)).includes('live')||norm(status(m)).includes('playing'),isBreak:norm(status(m)).includes('break')||norm(status(m)).includes('перерыв')||norm(status(m)).includes('pause'),quarterFinished:norm(status(m)).includes('finish')||norm(status(m)).includes('ended')||norm(status(m)).includes('заверш'),markets:markets(m),sourceUrl:source(m)}}
 function rawInfo(m){return{time:pick(m,['time','date','startTime','startTimestamp'],'—'),league:league(m)||'—',teamA:team(m,'home')||'—',teamB:team(m,'away')||'—',status:status(m)||'нет четвертей',sourceUrl:source(m)}}
 async function loadMatches(date,{live=false}={}){const slugs=await getBasketballSlugs();const attempts=[],matches=[];for(const slug of slugs){const path=`/${slug}/matches`;const paramsList=live?[{date,live:1,status:'live'},{date,status:'live'},{live:1},{date}]:[{date,status:'finished'},{date},{status:'finished'}];for(const params of paramsList){const r=await safe(path,params);attempts.push({path,params,ok:r.ok,error:r.error,status:r.status});if(r.ok){const arr=toArray(r.data,['matches','data','items','events','response','result']);for(const m of arr)matches.push({...m,__sportSlug:slug});if(arr.length)break}}if(matches.length)break}return{slugs,attempts,matches}}
-module.exports={API_KEY,getSports,mskNow,mskDate,loadMatches,isIpbl,matchToRows,rawInfo,liveMatchInfo,primeSignal,proMatch};
+module.exports={API_KEY,getSports,mskNow,mskDate,loadMatches,isIpbl,matchToRows,rawInfo,liveMatchInfo,primeSignal,proMatch,isActiveLiveMatch,isAllowedIpblDivision};
