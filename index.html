@@ -73,13 +73,15 @@ a{color:#93c5fd;font-weight:900}
 
 <section class="panel">
 <div class="title">Скан итогов предыдущих дней</div>
-<div class="small">Сканирует /api/results-scan. Ставка 500 ₽. Пробитие: +375 ₽ при кэфе 1.75. Не пробили: −500 ₽. Четверти одного матча объединяются в одну строку.</div>
+<div class="small">Сканирует /api/results-scan и /api/live-signals. Ставка 500 ₽. Пробитие: +375 ₽ при кэфе 1.75. Не пробили: −500 ₽. Четверти одного матча объединяются в одну строку.</div>
 <div class="controls">
 <input id="historyDate" type="date">
 <button id="checkApiBtn">Проверить API</button>
 <button id="scanHistoryBtn">Сканировать и посчитать</button>
 <button id="ipblBtn">Проверить IPBL</button>
 <button id="demoHistoryBtn">Показать демо отчёт</button>
+<button id="liveBtn">Запустить LIVE</button>
+<button id="stopLiveBtn">Остановить LIVE</button>
 </div>
 <div id="apiStatus" class="status">Готов к работе.</div>
 </section>
@@ -113,7 +115,7 @@ a{color:#93c5fd;font-weight:900}
 <script>
 'use strict';
 const $=id=>document.getElementById(id);
-const el={serverState:$('serverState'),keyState:$('keyState'),apiMatches:$('apiMatches'),finalBankTop:$('finalBankTop'),bankInput:$('bankInput'),bankValue:$('bankValue'),profitValue:$('profitValue'),saveBankBtn:$('saveBankBtn'),historyDate:$('historyDate'),checkApiBtn:$('checkApiBtn'),scanHistoryBtn:$('scanHistoryBtn'),ipblBtn:$('ipblBtn'),demoHistoryBtn:$('demoHistoryBtn'),apiStatus:$('apiStatus'),winsCount:$('winsCount'),lossesCount:$('lossesCount'),winRate:$('winRate'),totalProfit:$('totalProfit'),betRowsCount:$('betRowsCount'),quarterChart:$('quarterChart'),bankChart:$('bankChart'),rankingTable:$('rankingTable'),historyTable:$('historyTable')};
+const el={serverState:$('serverState'),keyState:$('keyState'),apiMatches:$('apiMatches'),finalBankTop:$('finalBankTop'),bankInput:$('bankInput'),bankValue:$('bankValue'),profitValue:$('profitValue'),saveBankBtn:$('saveBankBtn'),historyDate:$('historyDate'),checkApiBtn:$('checkApiBtn'),scanHistoryBtn:$('scanHistoryBtn'),ipblBtn:$('ipblBtn'),demoHistoryBtn:$('demoHistoryBtn'),liveBtn:$('liveBtn'),stopLiveBtn:$('stopLiveBtn'),apiStatus:$('apiStatus'),winsCount:$('winsCount'),lossesCount:$('lossesCount'),winRate:$('winRate'),totalProfit:$('totalProfit'),betRowsCount:$('betRowsCount'),quarterChart:$('quarterChart'),bankChart:$('bankChart'),rankingTable:$('rankingTable'),historyTable:$('historyTable')};
 const state={bank:10000};
 el.historyDate.value=new Date().toISOString().slice(0,10);
 function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;")}
@@ -132,7 +134,40 @@ async function checkApi(){try{setStatus('Проверяю API...');const res=awa
 async function scanHistory(){try{saveBank();el.scanHistoryBtn.disabled=true;setStatus('Сканирую и считаю...');const res=await fetch('/api/results-scan?date='+encodeURIComponent(el.historyDate.value)),data=await res.json();if(!res.ok||!data.ok)throw new Error(data.error||'Ошибка скана');const rows=normalizeRows(data.results||data.rows||[]);render(rows,data);setStatus('Готово. API матчей: '+(data.apiMatches??data.count??0)+'. Ставочных строк: '+rows.length+'.','ok')}catch(e){setStatus(e.message,'err');render([],{})}finally{el.scanHistoryBtn.disabled=false}}
 async function checkIpbl(){try{setStatus('Проверяю IPBL...');const res=await fetch('/api/ipbl?date='+encodeURIComponent(el.historyDate.value)),data=await res.json();if(!res.ok||!data.ok)throw new Error(data.error||'Ошибка IPBL');el.apiMatches.textContent=data.totalMatches??0;setStatus('IPBL/лиги: API вернул матчей '+(data.totalMatches??0)+', уникальных лиг '+(data.uniqueLeagues??0)+'. Подробности в консоли.','ok');console.log('IPBL diagnostic:',data)}catch(e){setStatus(e.message,'err')}}
 function demo(){saveBank();const rand=seedRand(el.historyDate.value||'demo'),teams=['Скорпионс','Биверс','Барракудас','Хаскис','Беарз','Рейвенс','Пираньяс','Октопус'],rows=[];for(let m=0;m<12;m++){const a=teams[Math.floor(rand()*teams.length)];let b=teams[Math.floor(rand()*teams.length)];if(a===b)b=teams[(teams.indexOf(a)+1)%teams.length];const time=String(10+m).padStart(2,'0')+':'+String(Math.floor(rand()*60)).padStart(2,'0');for(let q=1;q<=3;q++){const total=42+Math.floor(rand()*26),home=Math.floor(total*(.42+rand()*.22)),away=total-home;rows.push({time,league:'IPBL Prime Division',teamA:a,teamB:b,quarter:q,qScore:home+':'+away,qTotal:total,target:'ТБ55',passed:total>55,sourceUrl:'https://www.google.com/search?q='+encodeURIComponent(a+' '+b+' IPBL результат '+el.historyDate.value)})}}render(normalizeRows(rows),{apiMatches:rows.length});setStatus('Показан демо-отчёт для даты '+el.historyDate.value+'.','ok')}
-el.saveBankBtn.onclick=saveBank;el.checkApiBtn.onclick=checkApi;el.scanHistoryBtn.onclick=scanHistory;el.ipblBtn.onclick=checkIpbl;el.demoHistoryBtn.onclick=demo;saveBank();render([],{});checkApi();
+
+let liveTimer = null;
+
+async function scanLiveOnce(){
+  try{
+    saveBank();
+    setStatus('Сканирую LIVE матчи...');
+    const res = await fetch('/api/live-signals');
+    const data = await res.json();
+    if(!res.ok || !data.ok) throw new Error(data.error || 'Ошибка LIVE скана');
+
+    const rows = normalizeRows(data.results || []);
+    render(rows, { apiMatches: data.apiMatches ?? rows.length });
+    setStatus('LIVE обновлён. API матчей: '+(data.apiMatches ?? 0)+'. Сигналов/строк: '+rows.length+'.', 'ok');
+  }catch(e){
+    setStatus(e.message, 'err');
+  }
+}
+
+function startLive(){
+  scanLiveOnce();
+  if(liveTimer) clearInterval(liveTimer);
+  liveTimer = setInterval(scanLiveOnce, 15000);
+  setStatus('LIVE скан включён. Обновление каждые 15 секунд.', 'ok');
+}
+
+function stopLive(){
+  if(liveTimer) clearInterval(liveTimer);
+  liveTimer = null;
+  setStatus('LIVE скан остановлен.', 'ok');
+}
+
+
+el.saveBankBtn.onclick=saveBank;el.checkApiBtn.onclick=checkApi;el.scanHistoryBtn.onclick=scanHistory;el.ipblBtn.onclick=checkIpbl;el.demoHistoryBtn.onclick=demo;el.liveBtn.onclick=startLive;el.stopLiveBtn.onclick=stopLive;saveBank();render([],{});checkApi();
 </script>
 </body>
 </html>

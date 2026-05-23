@@ -1,3 +1,31 @@
 import { apiFetch, arr, pick, norm } from "./_common.js";
-const ENDPOINTS=["/matches","/events","/basketball/matches","/basketball/events","/basketball-3x3/matches","/basketball3x3/matches"];
-export default async function handler(req,res){const date=String(req.query.date||"").slice(0,10);let last;for(const ep of ENDPOINTS){try{const data=await apiFetch(ep,{date});const matches=arr(data);const leagues={};matches.forEach(m=>{const l=pick(m,["league.name","league","tournament.name","tournament","competition.name","competition"],"—");leagues[l]=(leagues[l]||0)+1});const ipbl=Object.entries(leagues).filter(([n])=>norm(n).includes("ipbl")||norm(n).includes("prime")||norm(n).includes("pro"));return res.status(200).json({ok:true,endpoint:ep,totalMatches:matches.length,uniqueLeagues:Object.keys(leagues).length,ipblLeagues:ipbl,leagues})}catch(e){last=e}}res.status(500).json({ok:false,error:last?.message||"Не найден endpoint"})}
+
+export default async function handler(req,res){
+  try{
+    const date = String(req.query.date || new Date().toISOString().slice(0,10)).slice(0,10);
+    const data = await apiFetch("/basketball/matches", { date });
+    const matches = arr(data);
+    const leagues = {};
+
+    matches.forEach(m => {
+      const league = pick(m, ["league.name","league","tournament.name","tournament","competition.name","competition"], "—");
+      leagues[league] = (leagues[league] || 0) + 1;
+    });
+
+    const ipbl = Object.entries(leagues).filter(([name]) => {
+      const n = norm(name);
+      return n.includes("ipbl") || n.includes("prime") || n.includes("pro") || n.includes("ибпл");
+    });
+
+    res.status(200).json({
+      ok:true,
+      endpoint:"/v2/basketball/matches",
+      totalMatches:matches.length,
+      uniqueLeagues:Object.keys(leagues).length,
+      ipblLeagues:ipbl,
+      leagues
+    });
+  }catch(e){
+    res.status(500).json({ok:false,error:e.message});
+  }
+}
