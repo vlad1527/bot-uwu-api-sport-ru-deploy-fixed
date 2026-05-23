@@ -3,171 +3,127 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Бот UWU 3.0</title>
+<title>Бот UWU 3.0 LIVE</title>
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:Arial,sans-serif;color:#fff;background:#07111f}
-body{background:radial-gradient(circle at 15% 10%,rgba(249,115,22,.35),transparent 28%),radial-gradient(circle at 85% 20%,rgba(59,130,246,.28),transparent 30%),linear-gradient(135deg,#07111f,#111827 45%,#05070d);overflow-x:hidden}
-header{text-align:center;padding:34px 14px 16px}
+body{margin:0;font-family:Arial,sans-serif;color:#fff;background:radial-gradient(circle at 15% 10%,rgba(249,115,22,.34),transparent 28%),radial-gradient(circle at 85% 15%,rgba(59,130,246,.3),transparent 30%),linear-gradient(135deg,#07111f,#111827 45%,#05070d);overflow-x:hidden}
+header{text-align:center;padding:34px 14px 12px}
 h1{margin:0;font-size:clamp(42px,8vw,92px);letter-spacing:-3px;text-transform:uppercase;text-shadow:0 0 34px rgba(255,140,0,.62)}
-.subtitle{margin-top:8px;color:#dbeafe;font-size:18px;font-weight:800}
-main{width:min(1180px,calc(100% - 32px));margin:20px auto 44px;padding:20px;border-radius:28px;background:rgba(15,23,42,.78);border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 80px rgba(0,0,0,.45)}
-.grid,.summary{display:grid;gap:12px;margin-bottom:18px}
-.grid{grid-template-columns:repeat(4,minmax(0,1fr))}
-.summary{grid-template-columns:repeat(5,minmax(0,1fr))}
+.subtitle{color:#dbeafe;font-weight:800;margin-top:8px}
+main{width:min(1180px,calc(100% - 28px));margin:20px auto 42px;padding:18px;border-radius:28px;background:rgba(15,23,42,.78);border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 80px rgba(0,0,0,.45)}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
 .card{padding:16px;border-radius:18px;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.12)}
 .card b{display:block;margin-top:5px;font-size:26px}
 .panel{padding:18px;margin-bottom:18px;border-radius:24px;background:linear-gradient(135deg,rgba(59,130,246,.14),rgba(124,58,237,.10));border:1px solid rgba(96,165,250,.25)}
-.panel.green{background:linear-gradient(135deg,rgba(34,197,94,.14),rgba(16,185,129,.08));border-color:rgba(34,197,94,.25)}
-.title{font-size:24px;font-weight:950;margin-bottom:12px}
+.panel.live{background:linear-gradient(135deg,rgba(249,115,22,.16),rgba(239,68,68,.10));border-color:rgba(249,115,22,.35)}
+.title{font-size:24px;font-weight:950;margin-bottom:10px}
 .small{font-size:13px;color:#cbd5e1;line-height:1.5}
 .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:16px 0}
 input,button{border:0;outline:none;border-radius:999px;padding:13px 16px;font-weight:900;font-size:14px}
 input{background:rgba(255,255,255,.10);color:#fff;min-width:170px}
 input[type=date]{color-scheme:dark}
-button{cursor:pointer;color:white;background:linear-gradient(135deg,#f97316,#ef4444);box-shadow:0 14px 34px rgba(239,68,68,.24)}
-button:disabled{opacity:.55;cursor:not-allowed}
-.status{width:100%;padding:13px 16px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);overflow-wrap:anywhere}
-.ok{color:#86efac}.err{color:#fca5a5}.green-text{color:#86efac!important}.red-text{color:#fca5a5!important}
-.charts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
-.chart{height:280px;padding:16px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
-canvas{width:100%;height:100%;display:block}
+button{cursor:pointer;color:#fff;background:linear-gradient(135deg,#f97316,#ef4444);box-shadow:0 14px 34px rgba(239,68,68,.24)}
+button:disabled{opacity:.55}
+.status{padding:13px 16px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);overflow-wrap:anywhere}
+.ok{color:#86efac}.err{color:#fca5a5}
+.summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px;margin-bottom:18px}
 .box{padding:14px;margin-bottom:18px;border-radius:20px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.12);overflow-x:auto}
 table{width:100%;min-width:980px;border-collapse:collapse}
 th,td{padding:12px;text-align:left;vertical-align:top;border-bottom:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.03)}
 th{color:#bfdbfe;background:rgba(59,130,246,.16);text-transform:uppercase;font-size:12px}
 a{color:#93c5fd;font-weight:900}
-.empty{padding:32px 16px;text-align:center;color:#cbd5e1;border:1px dashed rgba(255,255,255,.18);border-radius:18px}
-.match-row{border-left:5px solid rgba(96,165,250,.9);background:linear-gradient(90deg,rgba(59,130,246,.10),rgba(255,255,255,.02))}
-.match-badge{display:inline-flex;padding:6px 12px;margin-bottom:8px;border-radius:999px;background:linear-gradient(135deg,rgba(249,115,22,.22),rgba(239,68,68,.18));border:1px solid rgba(249,115,22,.35);color:#fdba74;font-size:12px;font-weight:900}
+.empty{padding:30px 16px;text-align:center;color:#cbd5e1;border:1px dashed rgba(255,255,255,.18);border-radius:18px}
+.live-signal{padding:22px;margin:14px 0;border-radius:24px;background:linear-gradient(90deg,rgba(249,115,22,.96),rgba(239,68,68,.88));box-shadow:0 0 46px rgba(249,115,22,.5);border:1px solid rgba(255,255,255,.22);animation:pulse 1s infinite alternate}
+@keyframes pulse{from{transform:scale(.995)}to{transform:scale(1.01);box-shadow:0 0 70px rgba(249,115,22,.8)}}
+.live-teams{font-size:clamp(24px,4vw,42px);font-weight:950}
+.live-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.live-pill{padding:8px 12px;border-radius:999px;background:rgba(0,0,0,.22);font-weight:900}
+.match-row{border-left:5px solid rgba(96,165,250,.9)}
 .quarter{display:inline-flex;gap:6px;margin:3px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:900;white-space:nowrap}
-.win{background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.35);color:#86efac}
-.lose{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.35);color:#fca5a5}
-.badge-win,.badge-lose{display:inline-flex;padding:6px 10px;border-radius:999px;font-weight:950;font-size:12px}
-.badge-win{background:rgba(34,197,94,.18);color:#86efac}.badge-lose{background:rgba(239,68,68,.18);color:#fca5a5}
-@media(max-width:900px){main{width:calc(100% - 14px);padding:12px;border-radius:20px}h1{font-size:clamp(38px,14vw,60px);letter-spacing:-1px}.grid,.summary,.charts{grid-template-columns:1fr}.controls{flex-direction:column;align-items:stretch}input,button{width:100%;min-width:0}.panel{padding:14px;border-radius:18px}.chart{height:230px}table{min-width:780px}.box{padding:10px}}
+.win{background:rgba(34,197,94,.18);color:#86efac}.lose{background:rgba(239,68,68,.18);color:#fca5a5}
+@media(max-width:900px){main{width:calc(100% - 14px);padding:12px;border-radius:20px}h1{font-size:clamp(38px,14vw,60px);letter-spacing:-1px}.grid,.summary{grid-template-columns:1fr}.controls{flex-direction:column;align-items:stretch}input,button{width:100%;min-width:0}.panel{padding:14px;border-radius:18px}table{min-width:760px}.box{padding:10px}}
 </style>
 </head>
 <body>
 <header>
 <h1>Бот UWU 3.0</h1>
-<div class="subtitle">IPBL Prime/Pro • матчи, четверти, рейтинг и автоставки</div>
+<div class="subtitle">LIVE IPBL • сигнал ТБ 55.5 • звук денег</div>
 </header>
 <main>
 <section class="grid">
 <div class="card">Сервер<b id="serverState">—</b></div>
 <div class="card">API-key<b id="keyState">—</b></div>
-<div class="card">Матчей API<b id="apiMatches">0</b></div>
-<div class="card">Финальный банк<b id="finalBankTop">10 000 ₽</b></div>
+<div class="card">LIVE сигналов<b id="liveCount">0</b></div>
+<div class="card">Финальный банк<b id="finalBank">10 000 ₽</b></div>
 </section>
 
-<section class="panel green">
-<div class="title">Демо счёт</div>
-<div class="grid">
-<div class="card">Текущий банк<b id="bankValue">10 000 ₽</b></div>
-<div class="card"><label>Введите банк</label><br><input id="bankInput" type="number" value="10000" min="0"></div>
-<div class="card">Прибыль<b id="profitValue" class="green-text">+0 ₽</b></div>
-<div class="card"><button id="saveBankBtn" style="width:100%">Сохранить банк</button></div>
+<section class="panel live">
+<div class="title">LIVE скан ТБ 55.5</div>
+<div class="small">Проверка идёт каждые 1 секунду через <b>/api/live-signals</b>. Как только API отдаёт подходящий live-матч с тоталом ТБ 55.5 — матч появляется крупно и играет звук шелеста денег.</div>
+<div class="controls">
+<button id="startLiveBtn">Запустить LIVE</button>
+<button id="stopLiveBtn">Остановить LIVE</button>
+<button id="soundBtn">Включить звук денег</button>
+<button id="testBtn">Тест сигнала</button>
 </div>
+<div id="liveStatus" class="status">LIVE остановлен.</div>
+<div id="liveSignals"><div class="empty">Пока нет live-сигналов ТБ 55.5.</div></div>
 </section>
 
 <section class="panel">
 <div class="title">Скан итогов предыдущих дней</div>
-<div class="small">Сканирует /api/results-scan и /api/live-signals. Ставка 500 ₽. Пробитие: +375 ₽ при кэфе 1.75. Не пробили: −500 ₽. Четверти одного матча объединяются в одну строку.</div>
+<div class="small">Исторический скан через /api/results-scan. Четверти одного матча объединяются в одну строку.</div>
 <div class="controls">
-<input id="historyDate" type="date">
-<button id="checkApiBtn">Проверить API</button>
-<button id="scanHistoryBtn">Сканировать и посчитать</button>
-<button id="ipblBtn">Проверить IPBL</button>
-<button id="demoHistoryBtn">Показать демо отчёт</button>
-<button id="liveBtn">Запустить LIVE</button>
-<button id="stopLiveBtn">Остановить LIVE</button>
+<input id="bankInput" type="number" value="10000" min="0">
+<input id="dateInput" type="date">
+<button id="healthBtn">Проверить API</button>
+<button id="scanBtn">Сканировать и посчитать</button>
+<button id="demoBtn">Демо отчёт</button>
 </div>
-<div id="apiStatus" class="status">Готов к работе.</div>
+<div id="status" class="status">Готов к работе.</div>
 </section>
 
 <section class="summary">
-<div class="card">Пробили<b id="winsCount">0</b></div>
-<div class="card">Не пробили<b id="lossesCount">0</b></div>
-<div class="card">% пробития<b id="winRate">0%</b></div>
-<div class="card">Прибыль<b id="totalProfit">0 ₽</b></div>
-<div class="card">Ставочных строк<b id="betRowsCount">0</b></div>
-</section>
-
-<section class="charts">
-<div class="chart"><canvas id="quarterChart" width="700" height="280"></canvas></div>
-<div class="chart"><canvas id="bankChart" width="700" height="280"></canvas></div>
-</section>
-
-<section class="box">
-<div class="title">Рейтинг команд по пробитию тотала</div>
-<div id="rankingTable"><div class="empty">Рейтинг появится после скана.</div></div>
+<div class="card">Пробили<b id="wins">0</b></div>
+<div class="card">Не пробили<b id="losses">0</b></div>
+<div class="card">% пробития<b id="rate">0%</b></div>
+<div class="card">Прибыль<b id="profit">0 ₽</b></div>
+<div class="card">Строк<b id="rowsCount">0</b></div>
 </section>
 
 <section class="box">
 <div class="title">Матчи, четверти и итог ставок</div>
 <table>
-<thead><tr><th>Время</th><th>Лига</th><th>Матч</th><th>Четверти</th><th>Итоговый счёт</th><th>Ставки</th><th>Итог ставок</th><th>Банк после</th><th>Источник</th></tr></thead>
-<tbody id="historyTable"><tr><td colspan="9"><div class="empty">Данных пока нет.</div></td></tr></tbody>
+<thead><tr><th>Время</th><th>Лига</th><th>Матч</th><th>Четверти</th><th>Финал</th><th>Ставки</th><th>Итог</th><th>Банк после</th><th>Источник</th></tr></thead>
+<tbody id="tableBody"><tr><td colspan="9"><div class="empty">Данных пока нет.</div></td></tr></tbody>
 </table>
 </section>
 </main>
+
 <script>
-'use strict';
 const $=id=>document.getElementById(id);
-const el={serverState:$('serverState'),keyState:$('keyState'),apiMatches:$('apiMatches'),finalBankTop:$('finalBankTop'),bankInput:$('bankInput'),bankValue:$('bankValue'),profitValue:$('profitValue'),saveBankBtn:$('saveBankBtn'),historyDate:$('historyDate'),checkApiBtn:$('checkApiBtn'),scanHistoryBtn:$('scanHistoryBtn'),ipblBtn:$('ipblBtn'),demoHistoryBtn:$('demoHistoryBtn'),liveBtn:$('liveBtn'),stopLiveBtn:$('stopLiveBtn'),apiStatus:$('apiStatus'),winsCount:$('winsCount'),lossesCount:$('lossesCount'),winRate:$('winRate'),totalProfit:$('totalProfit'),betRowsCount:$('betRowsCount'),quarterChart:$('quarterChart'),bankChart:$('bankChart'),rankingTable:$('rankingTable'),historyTable:$('historyTable')};
-const state={bank:10000};
-el.historyDate.value=new Date().toISOString().slice(0,10);
+const els={server:$('serverState'),key:$('keyState'),liveCount:$('liveCount'),finalBank:$('finalBank'),start:$('startLiveBtn'),stop:$('stopLiveBtn'),sound:$('soundBtn'),test:$('testBtn'),liveStatus:$('liveStatus'),liveSignals:$('liveSignals'),bank:$('bankInput'),date:$('dateInput'),health:$('healthBtn'),scan:$('scanBtn'),demo:$('demoBtn'),status:$('status'),wins:$('wins'),losses:$('losses'),rate:$('rate'),profit:$('profit'),rowsCount:$('rowsCount'),table:$('tableBody')};
+els.date.value=new Date().toISOString().slice(0,10);
+let liveTimer=null, soundEnabled=false, audioCtx=null, seen=new Set(), liveCount=0;
 function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;")}
 function money(v){return Math.round(Number(v)||0).toLocaleString('ru-RU')+' ₽'}
-function setStatus(msg,type=''){el.apiStatus.className='status '+type;el.apiStatus.textContent=msg}
-function saveBank(){const v=Number(el.bankInput.value||0);state.bank=Number.isFinite(v)&&v>=0?v:0;el.bankValue.textContent=money(state.bank)}
+function stat(el,msg,type=''){el.className='status '+type;el.textContent=msg}
+function initAudio(){const C=window.AudioContext||window.webkitAudioContext;if(!audioCtx&&C)audioCtx=new C();return audioCtx}
+function playMoney(force=false){if(!soundEnabled&&!force)return;const ctx=initAudio();if(!ctx)return;if(ctx.state==='suspended')ctx.resume();for(let i=0;i<10;i++){const n=ctx.createBufferSource(),b=ctx.createBuffer(1,4096,ctx.sampleRate),d=b.getChannelData(0);for(let j=0;j<d.length;j++)d[j]=(Math.random()*2-1)*.45;n.buffer=b;const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=900+Math.random()*2400;f.Q.value=8;const g=ctx.createGain(),s=ctx.currentTime+i*.045;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(.55,s+.01);g.gain.exponentialRampToValueAtTime(.0001,s+.18);n.connect(f);f.connect(g);g.connect(ctx.destination);n.start(s);n.stop(s+.2)}}
+async function toggleSound(){soundEnabled=!soundEnabled;if(soundEnabled){const ctx=initAudio();if(ctx&&ctx.state==='suspended')await ctx.resume();els.sound.textContent='Выключить звук денег';playMoney(true)}else els.sound.textContent='Включить звук денег'}
+function renderLiveSignal(s){const key=(s.id||'')+'|'+s.teamA+'|'+s.teamB+'|'+s.total;if(seen.has(key))return;seen.add(key);liveCount++;els.liveCount.textContent=liveCount;if(liveCount===1)els.liveSignals.innerHTML='';const div=document.createElement('div');div.className='live-signal';div.innerHTML=`<div class="live-teams">${esc(s.teamA)} — ${esc(s.teamB)}</div><div class="live-meta"><span class="live-pill">🏀 ${esc(s.league||'IPBL')}</span><span class="live-pill">Период: ${esc(s.period||'LIVE')}</span><span class="live-pill">Счёт: ${esc(s.score||'—')}</span><span class="live-pill">Сигнал: ТБ ${esc(s.total||55.5)}</span><span class="live-pill">Кэф: ${esc(s.odds||'—')}</span></div><div style="margin-top:10px"><a href="${esc(s.sourceUrl||'#')}" target="_blank">Открыть источник</a></div>`;els.liveSignals.prepend(div);playMoney()}
+async function pollLive(){try{const r=await fetch('/api/live-signals?line=55.5&ts='+Date.now());const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'LIVE API error');stat(els.liveStatus,'LIVE обновлён. API матчей: '+(d.apiMatches??0)+'. Сигналов/строк: '+(d.results?.length||0)+'.','ok');(d.results||[]).forEach(renderLiveSignal)}catch(e){stat(els.liveStatus,e.message,'err')}}
+function startLive(){if(liveTimer)clearInterval(liveTimer);pollLive();liveTimer=setInterval(pollLive,1000);stat(els.liveStatus,'LIVE запущен: проверка каждую 1 секунду.','ok')}
+function stopLive(){if(liveTimer)clearInterval(liveTimer);liveTimer=null;stat(els.liveStatus,'LIVE остановлен.')}
+function testSignal(){renderLiveSignal({id:Date.now(),teamA:'Скорпионс',teamB:'Биверс',league:'IPBL Prime Division',period:2,score:'31:27',total:55.5,odds:1.75,sourceUrl:'https://www.google.com/search?q=Скорпионс+Биверс+IPBL+результат'})}
 function seedRand(s){let seed=0;for(let i=0;i<s.length;i++)seed=(seed*31+s.charCodeAt(i))>>>0;return()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}}
-function normalizeRows(rawRows){let bank=state.bank;return(rawRows||[]).map((r,i)=>{const teamA=r.teamA||r.home||r.homeTeam||'—',teamB=r.teamB||r.away||r.awayTeam||'—',league=r.league||r.tournament||r.competition||'—';const targetText=String(r.target||'ТБ55');const target=Number(targetText.replace(/[^0-9.]/g,'')||55);const qTotal=Number(r.qTotal??r.total??0);const passed=typeof r.passed==='boolean'?r.passed:qTotal>target;const profit=passed?375:-500;bank+=profit;return{time:r.time||r.date||'—',league,teamA,teamB,quarter:Number(r.quarter||((i%3)+1)),qScore:r.qScore||r.score||'0:0',qTotal,target:targetText,passed,profit,bankAfter:bank,sourceUrl:r.sourceUrl||r.matchUrl||r.eventUrl||r.url||('https://www.google.com/search?q='+encodeURIComponent(teamA+' '+teamB+' '+league+' результат матча'))}}).sort((a,b)=>String(a.time).localeCompare(String(b.time)))}
-function groupRows(rows){const map=new Map();rows.forEach(r=>{const teams=[r.teamA,r.teamB].sort().join(' — ');const key=String(r.time).slice(0,16)+'|'+r.league+'|'+teams;if(!map.has(key))map.set(key,{time:r.time,league:r.league,teamA:r.teamA,teamB:r.teamB,rows:[],profit:0,bankAfter:r.bankAfter,sourceUrl:r.sourceUrl});const g=map.get(key);g.rows.push(r);g.profit+=r.profit;g.bankAfter=r.bankAfter;if(!g.sourceUrl)g.sourceUrl=r.sourceUrl});return[...map.values()].map(g=>{g.rows.sort((a,b)=>a.quarter-b.quarter);let h=0,a=0;g.rows.forEach(r=>{const p=String(r.qScore).split(':').map(Number);h+=Number.isFinite(p[0])?p[0]:0;a+=Number.isFinite(p[1])?p[1]:0});g.finalScore=h+':'+a;g.betCount=g.rows.length;g.passedCount=g.rows.filter(r=>r.passed).length;g.failedCount=g.betCount-g.passedCount;return g}).sort((a,b)=>String(a.time).localeCompare(String(b.time)))}
-function render(rows,meta={}){const wins=rows.filter(r=>r.passed).length,losses=rows.length-wins,finalBank=rows.length?rows[rows.length-1].bankAfter:state.bank,profit=finalBank-state.bank;el.apiMatches.textContent=meta.apiMatches??meta.count??rows.length??0;el.finalBankTop.textContent=money(finalBank);el.winsCount.textContent=wins;el.lossesCount.textContent=losses;el.winRate.textContent=rows.length?Math.round(wins/rows.length*100)+'%':'0%';el.totalProfit.textContent=money(profit);el.totalProfit.className=profit>=0?'green-text':'red-text';el.betRowsCount.textContent=rows.length;el.profitValue.textContent=(profit>0?'+':'')+money(profit);el.profitValue.className=profit>=0?'green-text':'red-text';renderTable(rows);renderRanking(rows);drawQuarter(rows);drawBank(rows)}
-function renderTable(rows){if(!rows.length){el.historyTable.innerHTML='<tr><td colspan="9"><div class="empty">Ставочных строк нет. API мог вернуть матчи без счёта по четвертям или без нужной лиги.</div></td></tr>';return}const grouped=groupRows(rows);el.historyTable.innerHTML=grouped.map(m=>{const qs=m.rows.map(r=>'<div class="quarter '+(r.passed?'win':'lose')+'">Q'+esc(r.quarter)+' • '+esc(r.qScore)+' • '+esc(r.target)+' • '+(r.passed?'✔':'✖')+' • '+(r.profit>0?'+':'')+money(r.profit)+'</div>').join('');return'<tr class="match-row"><td>'+esc(m.time)+'</td><td>'+esc(m.league)+'</td><td><div class="match-badge">🏀 Один матч • '+m.rows.length+' четверти</div><div><b>'+esc(m.teamA)+' — '+esc(m.teamB)+'</b></div></td><td>'+qs+'</td><td><b>'+esc(m.finalScore)+'</b></td><td>'+m.betCount+' ставок<br><span class="muted">Пробили: '+m.passedCount+', нет: '+m.failedCount+'</span></td><td><span class="'+(m.profit>=0?'badge-win':'badge-lose')+'">'+(m.profit>0?'+':'')+money(m.profit)+'</span></td><td>'+money(m.bankAfter)+'</td><td><a href="'+esc(m.sourceUrl)+'" target="_blank" rel="noopener">Открыть</a></td></tr>'}).join('')}
-function renderRanking(rows){if(!rows.length){el.rankingTable.innerHTML='<div class="empty">Рейтинг появится после скана.</div>';return}const r={};rows.forEach(row=>[row.teamA,row.teamB].forEach(t=>{if(!r[t])r[t]={team:t,total:0,wins:0};r[t].total++;if(row.passed)r[t].wins++}));const sorted=Object.values(r).map(x=>({...x,losses:x.total-x.wins,percent:Math.round(x.wins/x.total*100)})).sort((a,b)=>b.percent-a.percent||b.total-a.total);el.rankingTable.innerHTML='<table><thead><tr><th>Команда</th><th>Матчей/четвертей</th><th>Пробили</th><th>Не пробили</th><th>%</th></tr></thead><tbody>'+sorted.map(x=>'<tr><td>'+esc(x.team)+'</td><td>'+x.total+'</td><td>'+x.wins+'</td><td>'+x.losses+'</td><td>'+x.percent+'%</td></tr>').join('')+'</tbody></table>'}
-function drawQuarter(rows){const c=el.quarterChart,ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(255,255,255,.92)';ctx.font='bold 18px Arial';ctx.fillText('Пробили / не пробили по четвертям',18,28);const d=[1,2,3].map(q=>{const a=rows.filter(r=>r.quarter===q);return{q,win:a.filter(r=>r.passed).length,lose:a.filter(r=>!r.passed).length}});const max=Math.max(1,...d.flatMap(x=>[x.win,x.lose])),bottom=h-42,top=52,g=w/3;d.forEach((x,i)=>{const cx=g*i+g/2,bw=48,wh=x.win/max*(bottom-top),lh=x.lose/max*(bottom-top);ctx.fillStyle='rgba(34,197,94,.85)';ctx.fillRect(cx-bw-8,bottom-wh,bw,wh);ctx.fillStyle='rgba(239,68,68,.85)';ctx.fillRect(cx+8,bottom-lh,bw,lh);ctx.fillStyle='#fff';ctx.font='bold 15px Arial';ctx.fillText(String(x.win),cx-bw+10,bottom-wh-8);ctx.fillText(String(x.lose),cx+24,bottom-lh-8);ctx.fillStyle='rgba(255,255,255,.75)';ctx.fillText(x.q+' четверть',cx-40,h-14)})}
-function drawBank(rows){const c=el.bankChart,ctx=c.getContext('2d'),w=c.width,h=c.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(255,255,255,.92)';ctx.font='bold 18px Arial';ctx.fillText('Движение банка',18,28);const vals=[state.bank,...rows.map(r=>r.bankAfter)];if(vals.length<2){ctx.fillStyle='rgba(255,255,255,.75)';ctx.fillText(money(state.bank),18,h-30);return}const min=Math.min(...vals),max=Math.max(...vals),pad=46;ctx.strokeStyle='rgba(96,165,250,.95)';ctx.lineWidth=3;ctx.beginPath();vals.forEach((v,i)=>{const x=pad+i*(w-pad*2)/(vals.length-1),y=h-pad-(v-min)/(Math.max(1,max-min))*(h-pad*2);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();ctx.fillStyle='#fff';ctx.font='13px Arial';ctx.fillText(money(max),18,54);ctx.fillText(money(min),18,h-20)}
-async function checkApi(){try{setStatus('Проверяю API...');const res=await fetch('/api/health'),data=await res.json();if(!res.ok||!data.ok)throw new Error(data.error||'API не отвечает');el.serverState.textContent='Онлайн';el.keyState.textContent=data.hasKey?'Есть':'Нет';setStatus('API работает. Ключ: '+(data.hasKey?'есть':'нет')+'.','ok')}catch(e){el.serverState.textContent='Ошибка';setStatus(e.message,'err')}}
-async function scanHistory(){try{saveBank();el.scanHistoryBtn.disabled=true;setStatus('Сканирую и считаю...');const res=await fetch('/api/results-scan?date='+encodeURIComponent(el.historyDate.value)),data=await res.json();if(!res.ok||!data.ok)throw new Error(data.error||'Ошибка скана');const rows=normalizeRows(data.results||data.rows||[]);render(rows,data);setStatus('Готово. API матчей: '+(data.apiMatches??data.count??0)+'. Ставочных строк: '+rows.length+'.','ok')}catch(e){setStatus(e.message,'err');render([],{})}finally{el.scanHistoryBtn.disabled=false}}
-async function checkIpbl(){try{setStatus('Проверяю IPBL...');const res=await fetch('/api/ipbl?date='+encodeURIComponent(el.historyDate.value)),data=await res.json();if(!res.ok||!data.ok)throw new Error(data.error||'Ошибка IPBL');el.apiMatches.textContent=data.totalMatches??0;setStatus('IPBL/лиги: API вернул матчей '+(data.totalMatches??0)+', уникальных лиг '+(data.uniqueLeagues??0)+'. Подробности в консоли.','ok');console.log('IPBL diagnostic:',data)}catch(e){setStatus(e.message,'err')}}
-function demo(){saveBank();const rand=seedRand(el.historyDate.value||'demo'),teams=['Скорпионс','Биверс','Барракудас','Хаскис','Беарз','Рейвенс','Пираньяс','Октопус'],rows=[];for(let m=0;m<12;m++){const a=teams[Math.floor(rand()*teams.length)];let b=teams[Math.floor(rand()*teams.length)];if(a===b)b=teams[(teams.indexOf(a)+1)%teams.length];const time=String(10+m).padStart(2,'0')+':'+String(Math.floor(rand()*60)).padStart(2,'0');for(let q=1;q<=3;q++){const total=42+Math.floor(rand()*26),home=Math.floor(total*(.42+rand()*.22)),away=total-home;rows.push({time,league:'IPBL Prime Division',teamA:a,teamB:b,quarter:q,qScore:home+':'+away,qTotal:total,target:'ТБ55',passed:total>55,sourceUrl:'https://www.google.com/search?q='+encodeURIComponent(a+' '+b+' IPBL результат '+el.historyDate.value)})}}render(normalizeRows(rows),{apiMatches:rows.length});setStatus('Показан демо-отчёт для даты '+el.historyDate.value+'.','ok')}
-
-let liveTimer = null;
-
-async function scanLiveOnce(){
-  try{
-    saveBank();
-    setStatus('Сканирую LIVE матчи...');
-    const res = await fetch('/api/live-signals');
-    const data = await res.json();
-    if(!res.ok || !data.ok) throw new Error(data.error || 'Ошибка LIVE скана');
-
-    const rows = normalizeRows(data.results || []);
-    render(rows, { apiMatches: data.apiMatches ?? rows.length });
-    setStatus('LIVE обновлён. API матчей: '+(data.apiMatches ?? 0)+'. Сигналов/строк: '+rows.length+'.', 'ok');
-  }catch(e){
-    setStatus(e.message, 'err');
-  }
-}
-
-function startLive(){
-  scanLiveOnce();
-  if(liveTimer) clearInterval(liveTimer);
-  liveTimer = setInterval(scanLiveOnce, 15000);
-  setStatus('LIVE скан включён. Обновление каждые 15 секунд.', 'ok');
-}
-
-function stopLive(){
-  if(liveTimer) clearInterval(liveTimer);
-  liveTimer = null;
-  setStatus('LIVE скан остановлен.', 'ok');
-}
-
-
-el.saveBankBtn.onclick=saveBank;el.checkApiBtn.onclick=checkApi;el.scanHistoryBtn.onclick=scanHistory;el.ipblBtn.onclick=checkIpbl;el.demoHistoryBtn.onclick=demo;el.liveBtn.onclick=startLive;el.stopLiveBtn.onclick=stopLive;saveBank();render([],{});checkApi();
+function normalizeRows(rows){let bank=Number(els.bank.value||10000);return(rows||[]).map((r,i)=>{const qTotal=Number(r.qTotal??r.total??0),targetText=String(r.target||'ТБ55'),target=Number(targetText.replace(/[^0-9.]/g,'')||55),passed=typeof r.passed==='boolean'?r.passed:qTotal>target,profit=passed?375:-500;bank+=profit;return{time:r.time||'—',league:r.league||'—',teamA:r.teamA||'—',teamB:r.teamB||'—',quarter:Number(r.quarter||((i%3)+1)),qScore:r.qScore||'0:0',qTotal,target:targetText,passed,profit,bankAfter:bank,sourceUrl:r.sourceUrl||'#'}})}
+function group(rows){const m=new Map();rows.forEach(r=>{const key=String(r.time).slice(0,16)+'|'+r.league+'|'+[r.teamA,r.teamB].sort().join('-');if(!m.has(key))m.set(key,{...r,rows:[],profit:0});const g=m.get(key);g.rows.push(r);g.profit+=r.profit;g.bankAfter=r.bankAfter});return[...m.values()].map(g=>{let h=0,a=0;g.rows.sort((x,y)=>x.quarter-y.quarter).forEach(r=>{const p=String(r.qScore).split(':').map(Number);h+=p[0]||0;a+=p[1]||0});g.final=h+':'+a;return g})}
+function render(rows,meta={}){const wins=rows.filter(r=>r.passed).length,losses=rows.length-wins,final=rows.length?rows[rows.length-1].bankAfter:Number(els.bank.value||10000),profit=final-Number(els.bank.value||10000);els.finalBank.textContent=money(final);els.wins.textContent=wins;els.losses.textContent=losses;els.rate.textContent=rows.length?Math.round(wins/rows.length*100)+'%':'0%';els.profit.textContent=money(profit);els.rowsCount.textContent=rows.length;if(!rows.length){els.table.innerHTML='<tr><td colspan="9"><div class="empty">Ставочных строк нет.</div></td></tr>';return}els.table.innerHTML=group(rows).map(g=>{const qs=g.rows.map(r=>`<span class="quarter ${r.passed?'win':'lose'}">Q${r.quarter} ${esc(r.qScore)} ${esc(r.target)} ${r.passed?'✔':'✖'} ${r.profit>0?'+':''}${money(r.profit)}</span>`).join('');return`<tr class="match-row"><td>${esc(g.time)}</td><td>${esc(g.league)}</td><td><b>${esc(g.teamA)} — ${esc(g.teamB)}</b></td><td>${qs}</td><td>${esc(g.final)}</td><td>${g.rows.length} ставок</td><td class="${g.profit>=0?'win':'lose'}">${g.profit>0?'+':''}${money(g.profit)}</td><td>${money(g.bankAfter)}</td><td><a href="${esc(g.sourceUrl)}" target="_blank">Открыть</a></td></tr>`}).join('')}
+async function health(){try{stat(els.status,'Проверяю API...');const r=await fetch('/api/health'),d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'API error');els.server.textContent='Онлайн';els.key.textContent=d.hasKey?'Есть':'Нет';stat(els.status,'API работает.','ok')}catch(e){els.server.textContent='Ошибка';stat(els.status,e.message,'err')}}
+async function scan(){try{stat(els.status,'Сканирую...');const r=await fetch('/api/results-scan?date='+encodeURIComponent(els.date.value));const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'Ошибка скана');const rows=normalizeRows(d.results||[]);render(rows,d);stat(els.status,'Готово. API матчей: '+(d.apiMatches??0)+'. Строк: '+rows.length,'ok')}catch(e){stat(els.status,e.message,'err');render([],{})}}
+function demo(){const rand=seedRand(els.date.value),teams=['Скорпионс','Биверс','Барракудас','Хаскис','Беарз','Рейвенс','Пираньяс','Октопус'],rows=[];for(let i=0;i<12;i++){const a=teams[Math.floor(rand()*teams.length)];let b=teams[Math.floor(rand()*teams.length)];if(a===b)b=teams[(teams.indexOf(a)+1)%teams.length];const time=String(10+i).padStart(2,'0')+':'+String(Math.floor(rand()*60)).padStart(2,'0');for(let q=1;q<=3;q++){const total=42+Math.floor(rand()*26),h=Math.floor(total*(.42+rand()*.22)),aw=total-h;rows.push({time,league:'IPBL Prime Division',teamA:a,teamB:b,quarter:q,qScore:h+':'+aw,qTotal:total,target:'ТБ55',passed:total>55,sourceUrl:'#'})}}render(normalizeRows(rows));stat(els.status,'Демо для даты '+els.date.value,'ok')}
+els.sound.onclick=toggleSound;els.start.onclick=startLive;els.stop.onclick=stopLive;els.test.onclick=testSignal;els.health.onclick=health;els.scan.onclick=scan;els.demo.onclick=demo;health();
 </script>
 </body>
 </html>
