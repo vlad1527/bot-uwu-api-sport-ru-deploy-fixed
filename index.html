@@ -1,27 +1,671 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BOT UWU 3.0</title>
-<style>
-body{background:#0f172a;color:#fff;font-family:Arial,sans-serif;padding:40px}
-.box{background:#111827;padding:20px;border-radius:20px}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BOT UWU 3.0 — Live Prime/Pro</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      color: #fff;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(249,115,22,.34), transparent 30%),
+        radial-gradient(circle at 86% 10%, rgba(59,130,246,.28), transparent 32%),
+        linear-gradient(135deg, #07111f, #111827 48%, #05070d);
+      overflow-x: hidden;
+    }
+
+    header { text-align: center; padding: 36px 16px 16px; }
+    h1 {
+      margin: 0;
+      font-size: clamp(44px, 8vw, 92px);
+      letter-spacing: -3px;
+      text-shadow: 0 0 34px rgba(255,140,0,.62);
+    }
+    .subtitle { margin-top: 8px; color: #dbeafe; font-weight: 900; }
+
+    main {
+      width: min(1220px, calc(100% - 24px));
+      margin: 20px auto 44px;
+      padding: 18px;
+      border-radius: 28px;
+      background: rgba(15,23,42,.78);
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 24px 80px rgba(0,0,0,.45);
+    }
+
+    .statusbar, .summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .chip, .panel, .card {
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.065);
+      border-radius: 18px;
+    }
+
+    .chip { padding: 15px; }
+    .chip b { display: block; margin-top: 5px; font-size: 26px; }
+
+    .panel {
+      padding: 18px;
+      margin-bottom: 18px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(59,130,246,.14), rgba(124,58,237,.10));
+    }
+
+    .panel.live {
+      background: linear-gradient(135deg, rgba(249,115,22,.16), rgba(239,68,68,.10));
+      border-color: rgba(249,115,22,.35);
+    }
+
+    .title { font-size: 24px; font-weight: 950; margin-bottom: 8px; }
+    .small { color: #cbd5e1; font-size: 13px; line-height: 1.55; }
+
+    .controls { display: flex; gap: 10px; flex-wrap: wrap; margin: 16px 0; }
+    button, input {
+      border: 0;
+      outline: none;
+      border-radius: 999px;
+      padding: 13px 16px;
+      font-weight: 900;
+      color: white;
+    }
+    button {
+      cursor: pointer;
+      background: linear-gradient(135deg, #f97316, #ef4444);
+      box-shadow: 0 14px 34px rgba(239,68,68,.24);
+    }
+    button.secondary { background: linear-gradient(135deg, #2563eb, #7c3aed); }
+    button.greenbtn { background: linear-gradient(135deg, #16a34a, #22c55e); }
+    button.soundoff { background: linear-gradient(135deg, #475569, #64748b); }
+    input { background: rgba(255,255,255,.10); min-width: 160px; }
+
+    .status {
+      padding: 13px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.08);
+      overflow-wrap: anywhere;
+    }
+
+    .ok { color: #86efac; }
+    .err { color: #fca5a5; }
+    .green { color: #86efac; }
+    .red { color: #fca5a5; }
+    .yellow { color: #fde68a; }
+
+    .box {
+      padding: 14px;
+      margin-top: 14px;
+      border-radius: 20px;
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(255,255,255,.12);
+      overflow-x: auto;
+    }
+
+    table { width: 100%; min-width: 1100px; border-collapse: collapse; }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      vertical-align: top;
+      border-bottom: 1px solid rgba(255,255,255,.09);
+      background: rgba(255,255,255,.03);
+    }
+    th {
+      color: #bfdbfe;
+      background: rgba(59,130,246,.16);
+      text-transform: uppercase;
+      font-size: 12px;
+    }
+    a { color: #93c5fd; font-weight: 900; }
+
+    .empty {
+      padding: 30px 16px;
+      text-align: center;
+      color: #cbd5e1;
+      border: 1px dashed rgba(255,255,255,.18);
+      border-radius: 18px;
+    }
+
+    .live-row {
+      border-left: 5px solid #60a5fa;
+      background: linear-gradient(90deg, rgba(59,130,246,.13), rgba(255,255,255,.025));
+    }
+
+    .bet-ready {
+      border-left: 7px solid #22c55e;
+      background: linear-gradient(90deg, rgba(34,197,94,.24), rgba(255,255,255,.035));
+      box-shadow: inset 0 0 0 1px rgba(34,197,94,.28), 0 0 24px rgba(34,197,94,.16);
+    }
+
+    .league-pill, .quarter-pill, .tm-pill, .drop-pill, .siren {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .league-pill.prime { background: rgba(249,115,22,.20); color: #fdba74; border: 1px solid rgba(249,115,22,.35); }
+    .league-pill.pro { background: rgba(59,130,246,.20); color: #bfdbfe; border: 1px solid rgba(59,130,246,.35); }
+    .quarter-pill { background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.13); }
+    .tm-pill { background: rgba(250,204,21,.18); color: #fde68a; border: 1px solid rgba(250,204,21,.35); }
+    .drop-pill { background: rgba(255,255,255,.08); color: #e5e7eb; border: 1px solid rgba(255,255,255,.12); }
+    .drop-pill.ready { background: rgba(34,197,94,.20); color: #bbf7d0; border-color: rgba(34,197,94,.45); }
+    .tb-pill { background: rgba(34,197,94,.22); color: #bbf7d0; border: 1px solid rgba(34,197,94,.48); }
+    .tb-pill.idle { background: rgba(255,255,255,.08); color: #cbd5e1; border-color: rgba(255,255,255,.12); }
+    .siren { background: rgba(34,197,94,.28); color: #bbf7d0; border: 1px solid rgba(34,197,94,.55); animation: pulse .75s ease-in-out infinite alternate; }
+    .warning-mark {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      margin-right: 6px;
+      background: rgba(250,204,21,.24);
+      color: #fef08a;
+      border: 1px solid rgba(250,204,21,.55);
+      font-size: 20px;
+      font-weight: 950;
+      animation: warningBlink .55s ease-in-out infinite alternate;
+      box-shadow: 0 0 18px rgba(250,204,21,.35);
+    }
+    .near-ready {
+      border-left: 7px solid #facc15;
+      background: linear-gradient(90deg, rgba(250,204,21,.16), rgba(255,255,255,.03));
+    }
+
+    @keyframes pulse { to { transform: scale(1.04); box-shadow: 0 0 22px rgba(34,197,94,.55); } }
+    @keyframes warningBlink {
+      from { opacity: .35; transform: scale(.92); }
+      to { opacity: 1; transform: scale(1.08); }
+    }
+
+    .score-grid {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+
+    .qscore {
+      padding: 5px 8px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.10);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 820px) {
+      main { width: calc(100% - 12px); padding: 10px; border-radius: 18px; }
+      header { padding: 22px 10px 8px; }
+      h1 { font-size: 52px; letter-spacing: -1px; }
+      .statusbar, .summary { grid-template-columns: 1fr; }
+      .controls { flex-direction: column; }
+      button, input { width: 100%; min-width: 0; }
+      table { min-width: 980px; }
+    }
+  </style>
 </head>
 <body>
-<div class="box">
-<h1>BOT UWU 3.0</h1>
-<p>Архив содержит готовую HTML-версию live-сканера с:</p>
-<ul>
-<li>LIVE Prime/Pro мониторингом</li>
-<li>сигналами ТБ/ТМ</li>
-<li>звуком барабанов</li>
-<li>ручным добавлением матчей</li>
-<li>мигающим предупреждением</li>
-<li>авто-отслеживанием</li>
-</ul>
-<p>Открой index.html в браузере.</p>
-</div>
+<header>
+  <h1>BOT UWU 3.0</h1>
+  <div class="subtitle">LIVE IPBL Prime/Pro • максимум ТМ перед четвертью • сигнал при падении на 9+</div>
+</header>
+
+<main>
+  <section class="statusbar">
+    <div class="chip">Сервер<b id="serverState">Онлайн</b></div>
+    <div class="chip">Лиги<b>Prime / Pro</b></div>
+    <div class="chip">LIVE матчей<b id="liveMatchesCount">0</b></div>
+    <div class="chip">Сигналов<b id="signalsCount">0</b></div>
+  </section>
+
+  <section class="panel live">
+    <div class="title">LIVE сканер матчей</div>
+    <div class="small">
+      В таблице показываются все live-матчи из IPBL Prime Division и IPBL Pro Division, которые отдаёт backend /api/live-signals. Если нужный матч не появился, вставь ссылку Betcity вручную — он добавится в отслеживание и будет проверяться по тем же правилам. Для каждой четверти каждого матча бот хранит реальный максимальный ТМ, который был в перерыве перед стартом четверти. Если текущий ТМ падает на 9+ очков от этого значения, строка матча загорается зелёным, появляется сигнал ставки ТБ текущего тотала и звучит сигнал барабанов. Звук можно отключить кнопкой. Если падение уже близко к цели, но ещё меньше 9 очков, возле матча мигает жёлтый восклицательный знак; если ТМ снова поднимается и разница уменьшается, знак пропадает автоматически.
+    </div>
+
+    <div class="controls">
+      <button id="refreshBtn">Обновить live-счёт сейчас</button>
+      <button id="addDemoBtn" class="secondary">Показать пример сигнала</button>
+      <button id="clearBtn">Очистить</button>
+      <button id="trackAllBtn" class="greenbtn">Отслеживать все Prime/Pro live</button>
+      <button id="toggleSoundBtn" class="greenbtn">🔊 Барабаны: ВКЛ</button>
+      <input id="manualMatchUrl" type="url" placeholder="Вставь ссылку Betcity на матч" style="min-width:280px;" />
+      <button id="addManualMatchBtn" class="secondary">Добавить матч вручную</button>
+    </div>
+
+    <div id="statusLine" class="status ok">Готово. Жду реальные live-данные от backend /api/live-signals.</div>
+
+    <div class="box">
+      <table>
+        <thead>
+          <tr>
+            <th>Статус</th>
+            <th>Лига</th>
+            <th>Матч</th>
+            <th>Текущая четверть</th>
+            <th>Время в четверти</th>
+            <th>LIVE счёт</th>
+            <th>Очки по четвертям</th>
+            <th>Макс. ТМ перед четвертью</th>
+            <th>Текущий ТМ</th>
+            <th>Падение</th>
+            <th>Сигнал ставки</th>
+            <th>Betcity</th>
+          </tr>
+        </thead>
+        <tbody id="liveRows">
+          <tr><td colspan="12"><div class="empty">Пока нет live-матчей Prime/Pro.</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="title">Pro Division — демо-ставки стратегии</div>
+    <div class="small">
+      Здесь отображаются авто-ставки по стратегии падения ТМ на 9+ очков. Сохраняются baseline ТМ, текущий ТМ, сигнал ТБ и результат ставки.
+    </div>
+
+    <div class="summary">
+      <div class="chip">Активных ставок<b id="activeBets">0</b></div>
+      <div class="chip">Закрытых ставок<b id="closedBets">0</b></div>
+      <div class="chip">Выиграли<b id="wonBets">0</b></div>
+      <div class="chip">Проиграли<b id="lostBets">0</b></div>
+    </div>
+
+    <div class="box">
+      <table>
+        <thead>
+          <tr>
+            <th>Матч</th>
+            <th>Четверть</th>
+            <th>Baseline ТМ</th>
+            <th>Текущий ТМ</th>
+            <th>Сигнал</th>
+            <th>Статус</th>
+            <th>Банк</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="7">
+              <div class="empty">После появления live-сигнала здесь будут отображаться демо-ставки и результаты.</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="title">Скан итогов предыдущих дней</div>
+    <div class="small">
+      Раздел возвращён. Здесь будет исторический расчёт по завершённым матчам Prime/Pro Division.
+    </div>
+
+    <div class="controls">
+      <input type="date" />
+      <button>Проверить API</button>
+      <button>Сканировать и посчитать</button>
+      <button class="secondary">Демо отчёт</button>
+    </div>
+
+    <div class="summary">
+      <div class="chip">Пробили<b>0</b></div>
+      <div class="chip">Не пробили<b>0</b></div>
+      <div class="chip">% пробития<b>0%</b></div>
+      <div class="chip">Прибыль<b>0 ₽</b></div>
+    </div>
+
+    <div class="box">
+      <div class="empty">Исторический сканер подключается через backend /api/results-scan.</div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="title">Лучшие / худшие команды</div>
+    <div class="small">
+      Возвращён блок рейтингов команд по пробитию тоталов.
+    </div>
+
+    <div class="summary">
+      <div class="chip">Лучший %<b>—</b></div>
+      <div class="chip">Худший %<b>—</b></div>
+      <div class="chip">Матчей<b>0</b></div>
+      <div class="chip">ROI<b>0%</b></div>
+    </div>
+
+    <div class="box">
+      <div class="empty">После получения данных от API здесь появится рейтинг команд.</div>
+    </div>
+  </section>
+</main>
+
+<script>
+'use strict';
+
+const state = {
+  baselines: new Map(),
+  matches: [],
+  signals: 0,
+  soundEnabled: true,
+  alreadyPlayed: new Set()
+};
+
+const trackedBetcityMatches = [];
+const manualTrackedMatches = [];
+
+function playDrumSignal() {
+  if (!state.soundEnabled) return;
+
+  try {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const beats = [0, 0.14, 0.28, 0.42];
+
+    beats.forEach((offset, index) => {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(120 - index * 10, audioCtx.currentTime + offset);
+
+      gain.gain.setValueAtTime(0.0001, audioCtx.currentTime + offset);
+      gain.gain.exponentialRampToValueAtTime(0.8, audioCtx.currentTime + offset + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + offset + 0.18);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start(audioCtx.currentTime + offset);
+      osc.stop(audioCtx.currentTime + offset + 0.2);
+    });
+  } catch (err) {
+    console.warn('drum signal error', err);
+  }
+}
+
+const els = {
+  liveMatchesCount: document.getElementById('liveMatchesCount'),
+  signalsCount: document.getElementById('signalsCount'),
+  liveRows: document.getElementById('liveRows'),
+  statusLine: document.getElementById('statusLine'),
+  refreshBtn: document.getElementById('refreshBtn'),
+  addDemoBtn: document.getElementById('addDemoBtn'),
+  clearBtn: document.getElementById('clearBtn')
+};
+
+function esc(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
+
+function norm(value) {
+  return String(value ?? '').toLowerCase().replace(/ё/g, 'е');
+}
+
+function getBetcityIdFromUrl(url) {
+  const parts = String(url || '').split('/').filter(Boolean);
+  const last = parts[parts.length - 1] || '';
+  return /^[0-9]+$/.test(last) ? last : '';
+}
+
+function isTrackedBetcityMatch(match) {
+  const id = String(match.betcityId || match.eventId || match.id || getBetcityIdFromUrl(match.betcityUrl || match.sourceUrl || ''));
+  return trackedBetcityMatches.some((item) => item.betcityId === id) || manualTrackedMatches.some((item) => item.betcityId === id);
+}
+
+function isAllowedLeague(league, match = null) {
+  if (match && isTrackedBetcityMatch(match)) return true;
+  const text = norm(league);
+  return text.includes('ipbl') && (text.includes('prime division') || text.includes('pro division') || text.includes('prime') || text.includes('pro'));
+}
+
+function isPrime(league) { return norm(league).includes('prime'); }
+
+function matchKey(match) {
+  return [match.id || '', match.league, match.teamA, match.teamB, match.quarter].join('|');
+}
+
+function getMaxTmBeforeQuarter(match) {
+  const key = matchKey(match);
+  const current = Number(match.maxUnderBeforeQuarter ?? match.baselineUnder ?? match.breakMaxUnder ?? 0);
+  const saved = state.baselines.get(key);
+
+  if (Number.isFinite(current) && current > 0) {
+    if (!saved || current > saved) state.baselines.set(key, current);
+  }
+
+  return state.baselines.get(key) || null;
+}
+
+function getDrop(match, baseline) {
+  const currentTm = Number(match.currentUnder ?? match.liveUnder ?? match.maxCurrentUnder ?? 0);
+  if (!baseline || !Number.isFinite(currentTm) || currentTm <= 0) return null;
+  return Number((baseline - currentTm).toFixed(1));
+}
+
+function buildBetcityUrl(match) {
+  if (match.betcityUrl) return match.betcityUrl;
+  const query = encodeURIComponent(`${match.teamA} ${match.teamB}`);
+  return `https://betcity.ru/ru/search?text=${query}`;
+}
+
+function renderLiveMatches(matches) {
+  const incoming = matches || [];
+  const byBetcityId = new Map();
+  for (const match of incoming) {
+    const id = String(match.betcityId || match.eventId || match.id || getBetcityIdFromUrl(match.betcityUrl || match.sourceUrl || ''));
+    if (id) byBetcityId.set(id, match);
+  }
+
+  const mergedManual = manualTrackedMatches.map((manual) => {
+    const apiMatch = byBetcityId.get(manual.betcityId);
+    return apiMatch ? { ...manual, ...apiMatch, betcityId: manual.betcityId, betcityUrl: manual.betcityUrl, forcedTrack: true } : manual;
+  });
+
+  const notManual = incoming.filter((match) => !isTrackedBetcityMatch(match));
+  const filtered = mergedManual.concat(notManual).filter((match) => isAllowedLeague(match.league, match));
+  state.matches = filtered;
+  els.liveMatchesCount.textContent = filtered.length;
+
+  if (!filtered.length) {
+    els.liveRows.innerHTML = '<tr><td colspan="12"><div class="empty">Сейчас API не вернул live-матчи IPBL Prime/Pro. Другие лиги скрыты.</div></td></tr>'; 
+    return;
+  }
+
+  let signalCount = 0;
+
+  els.liveRows.innerHTML = filtered.map((match) => {
+    const baseline = getMaxTmBeforeQuarter(match);
+    const currentTm = Number(match.currentUnder ?? match.liveUnder ?? match.maxCurrentUnder ?? 0);
+    const drop = getDrop(match, baseline);
+    const ready = drop !== null && drop >= 9;
+    const nearReady = drop !== null && drop >= 7 && drop < 9;
+    const signalTotal = ready && currentTm ? currentTm : null;
+    if (ready) {
+      signalCount += 1;
+
+      const soundKey = `${match.teamA}-${match.teamB}-Q${match.quarter}`;
+      if (!state.alreadyPlayed.has(soundKey)) {
+        playDrumSignal();
+        state.alreadyPlayed.add(soundKey);
+      }
+    }
+
+    const leagueClass = isPrime(match.league) ? 'prime' : 'pro';
+    const quarterScores = Array.isArray(match.quarterScores) ? match.quarterScores : [];
+
+    return `
+      <tr class="live-row ${ready ? 'bet-ready' : nearReady ? 'near-ready' : ''}">
+        <td>${ready ? '<span class="siren">🟢🚨 СТАВКА</span>' : nearReady ? '<span class="warning-mark">!</span><span class="quarter-pill">СКОРО</span>' : '<span class="quarter-pill">LIVE</span>'}</td>
+        <td><span class="league-pill ${leagueClass}">${esc(match.forcedTrack ? 'Betcity tracked' : (isPrime(match.league) ? 'Prime Division' : 'Pro Division'))}</span><div class="small">${esc(match.league)}</div></td>
+        <td><b>${esc(match.teamA)} — ${esc(match.teamB)}</b></td>
+        <td><span class="quarter-pill">Q${esc(match.quarter || match.period || 'LIVE')}</span></td>
+        <td><b>${esc(match.quarterTime || match.liveTime || '—')}</b></td>
+        <td><b>${esc(match.score || 'API не дал счёт')}</b></td>
+        <td><div class="score-grid">${quarterScores.map((q, index) => `<span class="qscore">Q${index + 1}: ${esc(q)}</span>`).join('') || '<span class="qscore">нет данных</span>'}</div></td>
+        <td>${baseline ? `<span class="tm-pill">ТМ ${esc(baseline)}</span>` : '<span class="tm-pill">жду перерыв</span>'}</td>
+        <td>${currentTm ? `<span class="tm-pill">ТМ ${esc(currentTm)}</span>` : '<span class="tm-pill">нет линии</span>'}</td>
+        <td><span class="drop-pill ${ready ? 'ready' : nearReady ? 'warning' : ''}">${drop === null ? '—' : `${esc(drop)} оч.`}</span>${nearReady ? '<div class="small yellow">почти сигнал</div>' : ''}</td>
+        <td>${signalTotal ? `<span class="tb-pill">ТБ ${esc(signalTotal)}</span><div class="small">было ТМ ${esc(baseline)} → стало ТМ ${esc(currentTm)}</div>` : '<span class="tb-pill idle">нет сигнала</span>'}</td>
+        <td><a href="${esc(buildBetcityUrl(match))}" target="_blank" rel="noopener">Открыть матч</a></td>
+      </tr>
+    `;
+  }).join('');
+
+  state.signals = signalCount;
+  els.signalsCount.textContent = signalCount;
+}
+
+async function refreshLive() {
+  els.statusLine.textContent = 'Обновляю live-матчи...';
+  els.statusLine.className = 'status ok';
+
+  try {
+    const manualIds = manualTrackedMatches.map((item) => item.betcityId).join(',');
+    const response = await fetch('/api/live-signals?mode=all-prime-pro&manualBetcityIds=' + encodeURIComponent(manualIds) + '&ts=' + Date.now(), { cache: 'no-store' });
+    const data = await response.json();
+
+    if (!response.ok || !data.ok) throw new Error(data.error || 'Ошибка live endpoint');
+
+    renderLiveMatches(data.liveMatches || data.matches || []);
+    els.statusLine.textContent = `Обновлено. Получено всех live-матчей Prime/Pro: ${state.matches.length}. Сигналов 9+: ${state.signals}.`; 
+  } catch (error) {
+    els.statusLine.textContent = `Ошибка live: ${error.message}. В preview можно нажать «Показать пример сигнала».`;
+    els.statusLine.className = 'status err';
+  }
+}
+
+function addDemoSignal() {
+  renderLiveMatches([
+    {
+      id: 'demo-prime-1',
+      league: 'Баскетбол. Россия. IPBL. Мужчины. Prime Division. 3x3 (4x12 мин)',
+      teamA: 'Скорпионс',
+      teamB: 'Биверс',
+      quarter: 2,
+      quarterTime: '05:42',
+      score: '34:31',
+      quarterScores: ['18:17', '16:14', '0:0', '0:0'],
+      maxUnderBeforeQuarter: 69,
+      currentUnder: 59.5,
+      betcityUrl: 'https://betcity.ru/'
+    },
+    {
+      id: 'demo-pro-1',
+      league: 'Баскетбол. Россия. IPBL. Женщины. Pro Division. 3x3 (4x10 мин)',
+      teamA: 'Пантерс',
+      teamB: 'Лайонс',
+      quarter: 1,
+      quarterTime: '08:11',
+      score: '9:8',
+      quarterScores: ['9:8', '0:0', '0:0', '0:0'],
+      maxUnderBeforeQuarter: 50,
+      currentUnder: 42,
+      betcityUrl: 'https://betcity.ru/'
+    }
+  ]);
+  els.statusLine.textContent = 'Показан пример: максимум ТМ в скобках/цветом и зелёная подсветка при падении на 9+.';
+  els.statusLine.className = 'status ok';
+}
+
+function trackAllPrimePro() {
+  refreshLive();
+  els.statusLine.textContent = 'Включено отслеживание всех live-матчей IPBL Prime Division и IPBL Pro Division.';
+  els.statusLine.className = 'status ok';
+}
+
+function addManualMatch() {
+  const input = document.getElementById('manualMatchUrl');
+  const url = String(input?.value || '').trim();
+  const id = getBetcityIdFromUrl(url);
+
+  if (!url || !id) {
+    els.statusLine.textContent = 'Вставь корректную ссылку Betcity на матч, например https://betcity.ru/ru/live/basketball/441810/23170308';
+    els.statusLine.className = 'status err';
+    return;
+  }
+
+  if (!manualTrackedMatches.some((item) => item.betcityId === id)) {
+    manualTrackedMatches.push({
+      betcityId: id,
+      betcityUrl: url,
+      league: 'Баскетбол. Россия. IPBL. Prime/Pro Division',
+      teamA: `Матч Betcity #${id}`,
+      teamB: 'ожидаю данные API',
+      quarter: 'LIVE',
+      quarterTime: '—',
+      score: 'ожидаю live-счёт от API',
+      quarterScores: [],
+      forcedTrack: true
+    });
+  }
+
+  input.value = '';
+  renderLiveMatches(state.matches);
+  refreshLive();
+  els.statusLine.textContent = `Матч Betcity #${id} добавлен вручную и теперь отслеживается по всем правилам.`;
+  els.statusLine.className = 'status ok';
+}
+
+function toggleSound() {
+  state.soundEnabled = !state.soundEnabled;
+
+  const btn = document.getElementById('toggleSoundBtn');
+  if (btn) {
+    btn.textContent = state.soundEnabled ? '🔊 Барабаны: ВКЛ' : '🔇 Барабаны: ВЫКЛ';
+    btn.className = state.soundEnabled ? 'greenbtn' : 'soundoff';
+  }
+
+  els.statusLine.textContent = state.soundEnabled
+    ? 'Звуковой сигнал барабанов включён.'
+    : 'Звуковой сигнал барабанов выключен.';
+
+  els.statusLine.className = 'status ok';
+}
+
+function clearRows() {
+  manualTrackedMatches.length = 0;
+  state.baselines.clear();
+  state.matches = [];
+  state.signals = 0;
+  els.liveMatchesCount.textContent = '0';
+  els.signalsCount.textContent = '0';
+  els.liveRows.innerHTML = '<tr><td colspan="12"><div class="empty">Очищено.</div></td></tr>';
+}
+
+els.refreshBtn.addEventListener('click', refreshLive);
+els.addDemoBtn.addEventListener('click', addDemoSignal);
+els.clearBtn.addEventListener('click', clearRows);
+const trackAllBtn = document.getElementById('trackAllBtn');
+if (trackAllBtn) trackAllBtn.addEventListener('click', trackAllPrimePro);
+const addManualMatchBtn = document.getElementById('addManualMatchBtn');
+if (addManualMatchBtn) addManualMatchBtn.addEventListener('click', addManualMatch);
+const toggleSoundBtn = document.getElementById('toggleSoundBtn');
+if (toggleSoundBtn) toggleSoundBtn.addEventListener('click', toggleSound);
+
+addDemoSignal();
+</script>
 </body>
 </html>

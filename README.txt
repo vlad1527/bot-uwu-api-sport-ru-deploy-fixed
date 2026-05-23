@@ -1,2 +1,2 @@
-Откройте index.html в браузере.
-Для реальных LIVE данных требуется backend /api/live-signals.
+Готовый архив BOT UWU 3.0.
+Загрузите содержимое архива на Vercel. index.html должен быть в корне.
