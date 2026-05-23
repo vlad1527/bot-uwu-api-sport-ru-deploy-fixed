@@ -1,6 +1,6 @@
 {
-  "name": "bot-uwu-3-fast",
+  "name": "bot-uwu-3-api-sport-ru-fixed",
   "version": "1.0.0",
   "private": true,
-  "type": "module"
+  "scripts": { "start": "vercel dev" }
 }
