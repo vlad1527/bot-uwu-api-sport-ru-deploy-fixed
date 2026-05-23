@@ -1,7 +1,6 @@
 {
-  "name": "bot-uwu-3-final",
+  "name": "bot-uwu-3-api-sport-ru-fixed",
   "version": "1.0.0",
   "private": true,
-  "scripts": {"start":"vercel dev"},
-  "engines": {"node": ">=18"}
+  "scripts": { "start": "vercel dev" }
 }
