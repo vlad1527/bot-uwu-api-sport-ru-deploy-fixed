@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Бот UWU 3.0 LIVE</title>
+<title>Бот UWU 3.0 LIVE Persistent</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;color:#fff;background:radial-gradient(circle at 15% 10%,rgba(249,115,22,.34),transparent 28%),radial-gradient(circle at 85% 15%,rgba(59,130,246,.3),transparent 30%),linear-gradient(135deg,#07111f,#111827 45%,#05070d);overflow-x:hidden}
@@ -52,7 +52,7 @@ a{color:#93c5fd;font-weight:900}
 <body>
 <header>
 <h1>Бот UWU 3.0</h1>
-<div class="subtitle">LIVE IPBL • сигнал ТБ 55.5 • рейтинги команд • звук денег</div>
+<div class="subtitle">LIVE IPBL • постоянная проверка ТБ 55 • рейтинги команд • звук денег</div>
 </header>
 
 <main>
@@ -64,21 +64,21 @@ a{color:#93c5fd;font-weight:900}
 </section>
 
 <section class="panel live">
-<div class="title">LIVE скан ТБ 55.5</div>
-<div class="small">Проверка идёт каждые 1 секунду через <b>/api/live-signals</b>. Исправлено: LIVE больше не использует отдельный endpoint /live, который давал 401, а берёт данные через рабочие endpoints матчей. Реальная скорость зависит от api-sport.ru.</div>
+<div class="title">Постоянный LIVE скан ТБ 55</div>
+<div class="small">После нажатия «Запустить LIVE» режим работает постоянно, без остановки, пока ты сам не нажмёшь «Остановить LIVE». Проверка каждые 1 секунду. Если API временно вернёт ошибку, скан не выключается, а продолжает пробовать дальше. Данные должны приходить через разрешённый feed/API, без обхода защиты Betcity.</div>
 <div class="controls">
-<button id="startLiveBtn">Запустить LIVE</button>
+<button id="startLiveBtn">Запустить LIVE постоянно</button>
 <button id="stopLiveBtn">Остановить LIVE</button>
 <button id="soundBtn">Включить звук денег</button>
 <button id="testBtn" class="secondary">Тест сигнала</button>
 </div>
 <div id="liveStatus" class="status">LIVE остановлен.</div>
-<div id="liveSignals"><div class="empty">Пока нет live-сигналов ТБ 55.5.</div></div>
+<div id="liveSignals"><div class="empty">Пока нет live-сигналов ТБ 55.</div></div>
 </section>
 
 <section class="panel">
 <div class="title">Скан итогов предыдущих дней</div>
-<div class="small">Исторический скан через /api/results-scan. Четверти одного матча объединяются в одну строку. Рейтинги лучших/худших команд и график команд возвращены.</div>
+<div class="small">Исторический скан через /api/results-scan. Четверти одного матча объединяются в одну строку.</div>
 <div class="controls">
 <input id="bankInput" type="number" value="10000" min="0">
 <input id="dateInput" type="date">
@@ -128,18 +128,75 @@ a{color:#93c5fd;font-weight:900}
 const $=id=>document.getElementById(id);
 const els={server:$('serverState'),key:$('keyState'),liveCount:$('liveCount'),finalBank:$('finalBank'),start:$('startLiveBtn'),stop:$('stopLiveBtn'),sound:$('soundBtn'),test:$('testBtn'),liveStatus:$('liveStatus'),liveSignals:$('liveSignals'),bank:$('bankInput'),date:$('dateInput'),health:$('healthBtn'),scan:$('scanBtn'),demo:$('demoBtn'),status:$('status'),wins:$('wins'),losses:$('losses'),rate:$('rate'),profit:$('profit'),rowsCount:$('rowsCount'),table:$('tableBody'),ranking:$('rankingBox'),bestWorst:$('bestWorstBox'),quarterChart:$('quarterChart'),teamChart:$('teamChart'),bankChart:$('bankChart')};
 els.date.value=new Date().toISOString().slice(0,10);
-let liveTimer=null, soundEnabled=false, audioCtx=null, seen=new Set(), liveCount=0;
+
+let liveRunning=false, liveTimer=null, liveInFlight=false, liveFailures=0;
+let soundEnabled=false, audioCtx=null, seen=new Set(), liveCount=0;
+
 function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;")}
 function money(v){return Math.round(Number(v)||0).toLocaleString('ru-RU')+' ₽'}
 function stat(el,msg,type=''){el.className='status '+type;el.textContent=msg}
+
 function initAudio(){const C=window.AudioContext||window.webkitAudioContext;if(!audioCtx&&C)audioCtx=new C();return audioCtx}
 function playMoney(force=false){if(!soundEnabled&&!force)return;const ctx=initAudio();if(!ctx)return;if(ctx.state==='suspended')ctx.resume();for(let i=0;i<10;i++){const n=ctx.createBufferSource(),b=ctx.createBuffer(1,4096,ctx.sampleRate),d=b.getChannelData(0);for(let j=0;j<d.length;j++)d[j]=(Math.random()*2-1)*.45;n.buffer=b;const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=900+Math.random()*2400;f.Q.value=8;const g=ctx.createGain(),s=ctx.currentTime+i*.045;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(.55,s+.01);g.gain.exponentialRampToValueAtTime(.0001,s+.18);n.connect(f);f.connect(g);g.connect(ctx.destination);n.start(s);n.stop(s+.2)}}
 async function toggleSound(){soundEnabled=!soundEnabled;if(soundEnabled){const ctx=initAudio();if(ctx&&ctx.state==='suspended')await ctx.resume();els.sound.textContent='Выключить звук денег';playMoney(true)}else els.sound.textContent='Включить звук денег'}
-function renderLiveSignal(s){const key=(s.id||'')+'|'+s.teamA+'|'+s.teamB+'|'+s.total+'|'+s.score;if(seen.has(key))return;seen.add(key);liveCount++;els.liveCount.textContent=liveCount;if(liveCount===1)els.liveSignals.innerHTML='';const div=document.createElement('div');div.className='live-signal';div.innerHTML=`<div class="live-teams">${esc(s.teamA)} — ${esc(s.teamB)}</div><div class="live-meta"><span class="live-pill">🏀 ${esc(s.league||'IPBL')}</span><span class="live-pill">Период: ${esc(s.period||'LIVE')}</span><span class="live-pill">Счёт: ${esc(s.score||'—')}</span><span class="live-pill">Сигнал: ТБ ${esc(s.total||55.5)}</span><span class="live-pill">Кэф: ${esc(s.odds||'—')}</span></div><div style="margin-top:10px"><a href="${esc(s.sourceUrl||'#')}" target="_blank">Открыть источник</a></div>`;els.liveSignals.prepend(div);playMoney()}
-async function pollLive(){try{const r=await fetch('/api/live-signals?line=55.5&ts='+Date.now());const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'LIVE API error');stat(els.liveStatus,'LIVE обновлён. API матчей: '+(d.apiMatches??0)+'. Сигналов: '+(d.results?.length||0)+'.','ok');(d.results||[]).forEach(renderLiveSignal)}catch(e){stat(els.liveStatus,e.message,'err')}}
-function startLive(){if(liveTimer)clearInterval(liveTimer);pollLive();liveTimer=setInterval(pollLive,1000);stat(els.liveStatus,'LIVE запущен: проверка каждую 1 секунду.','ok')}
-function stopLive(){if(liveTimer)clearInterval(liveTimer);liveTimer=null;stat(els.liveStatus,'LIVE остановлен.')}
-function testSignal(){renderLiveSignal({id:Date.now(),teamA:'Скорпионс',teamB:'Биверс',league:'IPBL Prime Division',period:2,score:'31:27',total:55.5,odds:1.75,sourceUrl:'https://www.google.com/search?q=Скорпионс+Биверс+IPBL+результат'})}
+
+function renderLiveSignal(s){
+  const key=(s.id||'')+'|'+s.teamA+'|'+s.teamB+'|'+s.total+'|'+s.score;
+  if(seen.has(key))return;
+  seen.add(key);liveCount++;els.liveCount.textContent=liveCount;
+  if(liveCount===1)els.liveSignals.innerHTML='';
+  const div=document.createElement('div');
+  div.className='live-signal';
+  div.innerHTML=`<div class="live-teams">${esc(s.teamA)} — ${esc(s.teamB)}</div><div class="live-meta"><span class="live-pill">🏀 ${esc(s.league||'IPBL')}</span><span class="live-pill">Период: ${esc(s.period||'LIVE')}</span><span class="live-pill">Счёт: ${esc(s.score||'—')}</span><span class="live-pill">Есть ТБ ${esc(s.total||55)}</span><span class="live-pill">Кэф: ${esc(s.odds||'—')}</span></div><div style="margin-top:10px"><a href="${esc(s.sourceUrl||'#')}" target="_blank">Открыть источник</a></div>`;
+  els.liveSignals.prepend(div);
+  playMoney();
+}
+
+async function pollLiveOnce(){
+  if(!liveRunning || liveInFlight) return;
+  liveInFlight=true;
+  try{
+    const r=await fetch('/api/live-signals?line=55&ts='+Date.now(),{cache:'no-store'});
+    const d=await r.json();
+    if(!r.ok||!d.ok) throw new Error(d.error||'LIVE API error');
+    liveFailures=0;
+    stat(els.liveStatus,'LIVE работает постоянно. API матчей: '+(d.apiMatches??0)+'. Найдено сигналов ТБ55: '+(d.results?.length||0)+'. Последняя проверка: '+new Date().toLocaleTimeString('ru-RU'),'ok');
+    (d.results||[]).forEach(renderLiveSignal);
+  }catch(e){
+    liveFailures++;
+    stat(els.liveStatus,'LIVE продолжает работать. Ошибка проверки №'+liveFailures+': '+e.message,'err');
+  }finally{
+    liveInFlight=false;
+  }
+}
+
+function liveLoop(){
+  if(!liveRunning) return;
+  pollLiveOnce();
+}
+
+function startLive(){
+  liveRunning=true;
+  if(liveTimer) clearInterval(liveTimer);
+  pollLiveOnce();
+  liveTimer=setInterval(liveLoop,1000);
+  els.start.disabled=true;
+  els.stop.disabled=false;
+  stat(els.liveStatus,'LIVE запущен постоянно: проверка каждую 1 секунду.','ok');
+}
+
+function stopLive(){
+  liveRunning=false;
+  if(liveTimer) clearInterval(liveTimer);
+  liveTimer=null;
+  liveInFlight=false;
+  els.start.disabled=false;
+  els.stop.disabled=true;
+  stat(els.liveStatus,'LIVE остановлен вручную.');
+}
+
+function testSignal(){renderLiveSignal({id:Date.now(),teamA:'Скорпионс',teamB:'Биверс',league:'IPBL Prime Division',period:2,score:'31:27',total:55,odds:1.75,sourceUrl:'https://www.google.com/search?q=Скорпионс+Биверс+IPBL+результат'})}
+
 function seedRand(s){let seed=0;for(let i=0;i<s.length;i++)seed=(seed*31+s.charCodeAt(i))>>>0;return()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}}
 function normalizeRows(rows){let bank=Number(els.bank.value||10000);return(rows||[]).map((r,i)=>{const qTotal=Number(r.qTotal??r.total??0),targetText=String(r.target||'ТБ55'),target=Number(targetText.replace(/[^0-9.]/g,'')||55),passed=typeof r.passed==='boolean'?r.passed:qTotal>target,profit=passed?375:-500;bank+=profit;return{time:r.time||'—',league:r.league||'—',teamA:r.teamA||'—',teamB:r.teamB||'—',quarter:Number(r.quarter||((i%3)+1)),qScore:r.qScore||'0:0',qTotal,target:targetText,passed,profit,bankAfter:bank,sourceUrl:r.sourceUrl||'#'}})}
 function group(rows){const m=new Map();rows.forEach(r=>{const key=String(r.time).slice(0,16)+'|'+r.league+'|'+[r.teamA,r.teamB].sort().join('-');if(!m.has(key))m.set(key,{...r,rows:[],profit:0});const g=m.get(key);g.rows.push(r);g.profit+=r.profit;g.bankAfter=r.bankAfter});return[...m.values()].map(g=>{let h=0,a=0;g.rows.sort((x,y)=>x.quarter-y.quarter).forEach(r=>{const p=String(r.qScore).split(':').map(Number);h+=p[0]||0;a+=p[1]||0});g.final=h+':'+a;return g})}
@@ -154,7 +211,7 @@ function drawBank(rows){const {ctx,w,h}=baseChart(els.bankChart,'Движени�
 async function health(){try{stat(els.status,'Проверяю API...');const r=await fetch('/api/health'),d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'API error');els.server.textContent='Онлайн';els.key.textContent=d.hasKey?'Есть':'Нет';stat(els.status,'API работает.','ok')}catch(e){els.server.textContent='Ошибка';stat(els.status,e.message,'err')}}
 async function scan(){try{stat(els.status,'Сканирую...');const r=await fetch('/api/results-scan?date='+encodeURIComponent(els.date.value));const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'Ошибка скана');const rows=normalizeRows(d.results||[]);render(rows,d);stat(els.status,'Готово. API матчей: '+(d.apiMatches??0)+'. Строк: '+rows.length,'ok')}catch(e){stat(els.status,e.message,'err');render([],{})}}
 function demo(){const rand=seedRand(els.date.value),teams=['Скорпионс','Биверс','Барракудас','Хаскис','Беарз','Рейвенс','Пираньяс','Октопус'],rows=[];for(let i=0;i<16;i++){const a=teams[Math.floor(rand()*teams.length)];let b=teams[Math.floor(rand()*teams.length)];if(a===b)b=teams[(teams.indexOf(a)+1)%teams.length];const time=String(10+i).padStart(2,'0')+':'+String(Math.floor(rand()*60)).padStart(2,'0');for(let q=1;q<=3;q++){const total=42+Math.floor(rand()*26),h=Math.floor(total*(.42+rand()*.22)),aw=total-h;rows.push({time,league:'IPBL Prime Division',teamA:a,teamB:b,quarter:q,qScore:h+':'+aw,qTotal:total,target:'ТБ55',passed:total>55,sourceUrl:'#'})}}render(normalizeRows(rows));stat(els.status,'Демо для даты '+els.date.value,'ok')}
-els.sound.onclick=toggleSound;els.start.onclick=startLive;els.stop.onclick=stopLive;els.test.onclick=testSignal;els.health.onclick=health;els.scan.onclick=scan;els.demo.onclick=demo;health();render([]);
+els.sound.onclick=toggleSound;els.start.onclick=startLive;els.stop.onclick=stopLive;els.test.onclick=testSignal;els.health.onclick=health;els.scan.onclick=scan;els.demo.onclick=demo;els.stop.disabled=true;health();render([]);
 </script>
 </body>
 </html>
