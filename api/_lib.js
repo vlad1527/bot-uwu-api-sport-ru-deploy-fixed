@@ -2,6 +2,8 @@ const API_BASE = 'https://api.api-sport.ru/v2';
 const API_KEY = process.env.API_SPORT_KEY || process.env.API_SPORT_RU_KEY || process.env.API_SPORTS_KEY || '';
 const PRIME_TEAMS = ['Скорпионс', 'Биверс', 'Барракудас', 'Хаскис', 'Беарз', 'Рейвенс', 'Пираньяс', 'Октопус'];
 
+function mskNow(){return new Intl.DateTimeFormat('ru-RU',{timeZone:'Europe/Moscow',hour:'2-digit',minute:'2-digit',second:'2-digit',day:'2-digit',month:'2-digit',year:'numeric'}).format(new Date())}
+function mskDate(){const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Moscow',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const y=parts.find(p=>p.type==='year').value,m=parts.find(p=>p.type==='month').value,d=parts.find(p=>p.type==='day').value;return `${y}-${m}-${d}`}
 function norm(v){return String(v??'').toLowerCase().replace(/ё/g,'е').replace(/[^a-zа-я0-9. ]/g,' ').replace(/\s+/g,' ').trim()}
 function pick(obj,paths,f){for(const p of paths){const v=p.split('.').reduce((a,k)=>a&&a[k],obj);if(v!==undefined&&v!==null&&v!=='')return v}return f}
 function toArray(data,keys=[]){if(Array.isArray(data))return data;for(const k of keys){const v=pick(data,[k]);if(Array.isArray(v))return v}return[]}
@@ -9,7 +11,7 @@ async function apiFetch(path,params={}){
  if(!API_KEY)throw Object.assign(new Error('API_SPORT_KEY не задан в Vercel Environment Variables.'),{status:500});
  const url=new URL(API_BASE+path);Object.entries(params).forEach(([k,v])=>{if(v!==undefined&&v!==null&&v!=='')url.searchParams.set(k,v)});
  const r=await fetch(url,{headers:{Authorization:API_KEY,Accept:'application/json'}});
- const text=await r.text();let data;try{data=text?JSON.parse(text):{}}catch{data={raw:text}};
+ const text=await r.text();let data;try{data=text?JSON.parse(text):{}}catch{data={raw:text},mskNow,mskDate};
  if(!r.ok)throw Object.assign(new Error(`api-sport.ru HTTP ${r.status}: ${JSON.stringify(data).slice(0,400)}`),{status:r.status,data});
  return data
 }
@@ -64,6 +66,22 @@ function livePrimeSignal(m,line=55){
  const has=markets(m).some(x=>x.type==='TB'&&Math.abs(x.line-line)<.01);if(!has)return null;
  return{id:pick(m,['id','matchId','eventId'],`${a}-${b}-${Date.now()}`),league:getLeague(m),teamA:a,teamB:b,period:period(m),score:currentScore(m),total:line,odds:(markets(m).find(x=>x.type==='TB'&&Math.abs(x.line-line)<.01)||{}).odds||1.75,sourceUrl:source(m)}
 }
+
+function liveMatchInfo(m){
+ const a=team(m,'home'), b=team(m,'away');
+ return {
+  id: pick(m,['id','matchId','eventId'],`${a}-${b}`),
+  league: getLeague(m)||'—',
+  teamA:a||'—',
+  teamB:b||'—',
+  period: period(m),
+  score: currentScore(m) || 'API не дал счёт',
+  status: status(m)||'live',
+  mskTime: mskNow(),
+  sourceUrl: source(m)
+ }
+}
+
 function liveProMatch(m){
  if(!isIpbl(m)||!isPro(m))return null;const a=team(m,'home'),b=team(m,'away');const ms=markets(m).filter(x=>x.type==='TM'||x.type==='TB');
  return{id:pick(m,['id','matchId','eventId'],`${a}-${b}`),league:getLeague(m),teamA:a,teamB:b,period:period(m),quarter:period(m),score:currentScore(m),status:status(m),isLive:norm(status(m)).includes('live')||norm(status(m)).includes('playing'),isBreak:norm(status(m)).includes('break')||norm(status(m)).includes('перерыв')||norm(status(m)).includes('pause'),quarterFinished:norm(status(m)).includes('finish')||norm(status(m)).includes('ended')||norm(status(m)).includes('заверш'),markets:ms,sourceUrl:source(m)}
@@ -91,4 +109,4 @@ function rawMatchInfo(m){
  }
 }
 
-module.exports={API_KEY,getSports,loadMatches,matchToRows,livePrimeSignal,liveProMatch,rawMatchInfo,isIpbl,isPrime,isPro};
+module.exports={API_KEY,getSports,loadMatches,matchToRows,livePrimeSignal,liveProMatch,liveMatchInfo,rawMatchInfo,isIpbl,isPrime,isPro,mskNow,mskDate};

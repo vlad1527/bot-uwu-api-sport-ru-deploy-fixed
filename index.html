@@ -82,6 +82,17 @@ a{color:#93c5fd;font-weight:900}
 <div id="liveSignals"><div class="empty">Пока нет live-сигналов.</div></div>
 </section>
 
+<section class="panel">
+<div class="title">Матчи в реальном времени по МСК</div>
+<div class="small">Окно обновляется вместе с LIVE-режимом каждую 1 секунду. Показывает только реальные live-матчи, которые вернул api-sport.ru: команды, текущий счёт, период, статус и время по Москве. Если API не отдаёт счёт или live-линию — сайт это честно покажет.</div>
+<div class="box">
+<table>
+<thead><tr><th>Время МСК</th><th>Лига</th><th>Команды</th><th>Период</th><th>Текущий счёт</th><th>Статус</th><th>Источник</th></tr></thead>
+<tbody id="realtimeMatchesTable"><tr><td colspan="7"><div class="empty">LIVE ещё не запущен или API не вернул текущие матчи.</div></td></tr></tbody>
+</table>
+</div>
+</section>
+
 <section class="panel pro">
 <div class="title">Pro Division — демо-ставки стратегии</div>
 <div class="small">Здесь фиксируются все Pro-сигналы, baseline ТМ в перерыве, текущий ТМ, падение, ставка 500 ₽ и расчёт после окончания четверти.</div>
@@ -155,7 +166,7 @@ a{color:#93c5fd;font-weight:900}
 
 <script>
 const $=id=>document.getElementById(id);
-const els={server:$('serverState'),key:$('keyState'),liveApiCount:$('liveApiCount'),liveCount:$('liveCount'),finalBank:$('finalBank'),start:$('startLiveBtn'),stop:$('stopLiveBtn'),sound:$('soundBtn'),testPrime:$('testPrimeBtn'),testPro:$('testProBtn'),clearLive:$('clearLiveBtn'),liveStatus:$('liveStatus'),liveSignals:$('liveSignals'),bank:$('bankInput'),date:$('dateInput'),health:$('healthBtn'),scan:$('scanBtn'),demo:$('demoBtn'),status:$('status'),wins:$('wins'),losses:$('losses'),rate:$('rate'),profit:$('profit'),rowsCount:$('rowsCount'),table:$('tableBody'),rawBox:$('rawMatchesBox'),rawList:$('rawMatchesList'),ranking:$('rankingBox'),bestWorst:$('bestWorstBox'),quarterChart:$('quarterChart'),teamChart:$('teamChart'),bankChart:$('bankChart'),activeBets:$('activeBets'),settledBets:$('settledBets'),wonBets:$('wonBets'),lostBets:$('lostBets'),proProfit:$('proProfit'),proBetsTable:$('proBetsTable')};
+const els={server:$('serverState'),key:$('keyState'),liveApiCount:$('liveApiCount'),liveCount:$('liveCount'),finalBank:$('finalBank'),start:$('startLiveBtn'),stop:$('stopLiveBtn'),sound:$('soundBtn'),testPrime:$('testPrimeBtn'),testPro:$('testProBtn'),clearLive:$('clearLiveBtn'),liveStatus:$('liveStatus'),liveSignals:$('liveSignals'),bank:$('bankInput'),date:$('dateInput'),health:$('healthBtn'),scan:$('scanBtn'),demo:$('demoBtn'),status:$('status'),wins:$('wins'),losses:$('losses'),rate:$('rate'),profit:$('profit'),rowsCount:$('rowsCount'),table:$('tableBody'),rawBox:$('rawMatchesBox'),rawList:$('rawMatchesList'),ranking:$('rankingBox'),bestWorst:$('bestWorstBox'),quarterChart:$('quarterChart'),teamChart:$('teamChart'),bankChart:$('bankChart'),activeBets:$('activeBets'),settledBets:$('settledBets'),wonBets:$('wonBets'),lostBets:$('lostBets'),proProfit:$('proProfit'),proBetsTable:$('proBetsTable'),realtimeMatchesTable:$('realtimeMatchesTable')};
 els.date.value=new Date().toISOString().slice(0,10);
 let liveRunning=false,liveTimer=null,liveInFlight=false,liveFailures=0,soundEnabled=false,audioCtx=null,seen=new Set(),liveCount=0;
 let demoBank=10000, proStates={}, proBets=[];
@@ -168,7 +179,7 @@ function playMoney(force=false){if(!soundEnabled&&!force)return;const ctx=initAu
 async function toggleSound(){soundEnabled=!soundEnabled;if(soundEnabled){const ctx=initAudio();if(ctx&&ctx.state==='suspended')await ctx.resume();els.sound.textContent='Выключить звук денег';playMoney(true)}else els.sound.textContent='Включить звук денег'}
 
 function setDemoBank(v){demoBank=Number(v)||10000}
-function clearLiveSignals(){seen.clear();liveCount=0;els.liveCount.textContent='0';els.liveSignals.innerHTML='<div class="empty">Пока нет live-сигналов.</div>';proStates={};proBets=[];renderProBets();stat(els.liveStatus,'Сигналы очищены. LIVE '+(liveRunning?'продолжает работать.':'остановлен.'))}
+function clearLiveSignals(){seen.clear();liveCount=0;els.liveCount.textContent='0';els.liveSignals.innerHTML='<div class="empty">Пока нет live-сигналов.</div>';proStates={};proBets=[];renderProBets();renderRealtimeMatches([]);stat(els.liveStatus,'Сигналы очищены. LIVE '+(liveRunning?'продолжает работать.':'остановлен.'))}
 function signalKey(s){return (s.id||'')+'|'+s.strategy+'|'+s.teamA+'|'+s.teamB+'|'+s.period+'|'+s.total+'|'+s.score}
 function addLiveSignal(s, pro=false){
  const key=signalKey(s); if(seen.has(key))return; seen.add(key); liveCount++; els.liveCount.textContent=liveCount;
@@ -219,6 +230,24 @@ function renderProBets(){
  els.proBetsTable.innerHTML=proBets.map(b=>`<tr><td>${esc(b.time)}</td><td>${esc(b.match)}</td><td>Q${b.quarter}</td><td>ТМ ${b.baseline}</td><td>ТМ ${b.current}</td><td class="green">${b.drop}</td><td>500 ₽ на ТБ ${b.line}</td><td>${b.odds}</td><td class="${b.result==='Пробили'?'green':b.result==='Не пробили'?'red':'yellow'}">${esc(b.result)}</td><td>${money(b.bankAfter)}</td></tr>`).join('');
 }
 
+
+function renderRealtimeMatches(matches){
+ if(!els.realtimeMatchesTable)return;
+ if(!matches || !matches.length){
+  els.realtimeMatchesTable.innerHTML='<tr><td colspan="7"><div class="empty">Сейчас api-sport.ru не вернул live-матчи. LIVE продолжает проверку каждую секунду. Данные не подставляются вручную.</div></td></tr>';
+  return;
+ }
+ els.realtimeMatchesTable.innerHTML=matches.map(m=>`<tr>
+  <td>${esc(m.mskTime||'—')}</td>
+  <td>${esc(m.league||'—')}</td>
+  <td><b>${esc(m.teamA||'—')} — ${esc(m.teamB||'—')}</b></td>
+  <td>${esc(m.period||'LIVE')}</td>
+  <td><b>${esc(m.score||'API не дал счёт')}</b></td>
+  <td>${esc(m.status||'live')}</td>
+  <td><a href="${esc(m.sourceUrl||'#')}" target="_blank">Открыть</a></td>
+ </tr>`).join('');
+}
+
 async function pollLiveOnce(){
  if(!liveRunning||liveInFlight)return; liveInFlight=true;
  try{
@@ -226,6 +255,7 @@ async function pollLiveOnce(){
   if(!r.ok||!d.ok)throw new Error(d.error||'LIVE API error');
   els.liveApiCount.textContent=String(d.apiMatches??0);
   liveFailures=0; stat(els.liveStatus,'LIVE работает. Реальных матчей API: '+(d.apiMatches??0)+'. Prime сигналов: '+(d.results?.length||0)+'. Pro матчей: '+(d.proMatches?.length||0)+'. '+new Date().toLocaleTimeString('ru-RU'),'ok');
+  renderRealtimeMatches(d.liveMatches||[]);
   (d.results||[]).forEach(s=>addLiveSignal({...s,strategy:'PRIME_TB'},false));
   processProMatches(d.proMatches||[]);
  }catch(e){liveFailures++;stat(els.liveStatus,'LIVE продолжает работать. Ошибка №'+liveFailures+': '+e.message,'err')}
