@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Бот UWU 3.0 — Pro Strategy</title>
+<title>BOT UWU 3.0 Stable LIVE</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;color:#fff;background:radial-gradient(circle at 15% 10%,rgba(249,115,22,.34),transparent 28%),radial-gradient(circle at 85% 15%,rgba(59,130,246,.3),transparent 30%),linear-gradient(135deg,#07111f,#111827 45%,#05070d);overflow-x:hidden}
@@ -30,18 +30,14 @@ button.greenbtn{background:linear-gradient(135deg,#16a34a,#22c55e)}
 button:disabled{opacity:.55}
 .status{padding:13px 16px;border-radius:16px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);overflow-wrap:anywhere}
 .ok{color:#86efac}.err{color:#fca5a5}.green{color:#86efac}.red{color:#fca5a5}.yellow{color:#fde68a}
-.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
-.chart{height:300px;padding:16px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
-canvas{width:100%;height:100%;display:block}
 .box{padding:14px;margin-bottom:18px;border-radius:20px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.12);overflow-x:auto}
 table{width:100%;min-width:980px;border-collapse:collapse}
 th,td{padding:12px;text-align:left;vertical-align:top;border-bottom:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.03)}
 th{color:#bfdbfe;background:rgba(59,130,246,.16);text-transform:uppercase;font-size:12px}
 a{color:#93c5fd;font-weight:900}
 .empty{padding:30px 16px;text-align:center;color:#cbd5e1;border:1px dashed rgba(255,255,255,.18);border-radius:18px}
-.live-signal,.pro-signal{padding:22px;margin:14px 0;border-radius:24px;background:linear-gradient(90deg,rgba(249,115,22,.96),rgba(239,68,68,.88));box-shadow:0 0 46px rgba(249,115,22,.5);border:1px solid rgba(255,255,255,.22);animation:pulse 1s infinite alternate}
+.live-signal,.pro-signal{padding:22px;margin:14px 0;border-radius:24px;background:linear-gradient(90deg,rgba(249,115,22,.96),rgba(239,68,68,.88));box-shadow:0 0 46px rgba(249,115,22,.5);border:1px solid rgba(255,255,255,.22)}
 .pro-signal{background:linear-gradient(90deg,rgba(22,163,74,.95),rgba(14,165,233,.88));box-shadow:0 0 46px rgba(34,197,94,.44)}
-@keyframes pulse{from{transform:scale(.995)}to{transform:scale(1.01);box-shadow:0 0 70px rgba(249,115,22,.8)}}
 .live-teams{font-size:clamp(24px,4vw,42px);font-weight:950}
 .live-meta{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 .live-pill{padding:8px 12px;border-radius:999px;background:rgba(0,0,0,.22);font-weight:900}
@@ -49,14 +45,13 @@ a{color:#93c5fd;font-weight:900}
 .match-row{border-left:5px solid rgba(96,165,250,.9)}
 .quarter{display:inline-flex;gap:6px;margin:3px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.12);font-size:12px;font-weight:900;white-space:nowrap}
 .win{background:rgba(34,197,94,.18);color:#86efac}.lose{background:rgba(239,68,68,.18);color:#fca5a5}
-.team-good{border-left:5px solid #22c55e}.team-bad{border-left:5px solid #ef4444}
-@media(max-width:900px){main{width:calc(100% - 14px);padding:12px;border-radius:20px}h1{font-size:clamp(38px,14vw,60px);letter-spacing:-1px}.grid,.summary,.chart-grid{grid-template-columns:1fr}.controls{flex-direction:column;align-items:stretch}input,button{width:100%;min-width:0}.panel{padding:14px;border-radius:18px}table{min-width:760px}.box{padding:10px}.chart{height:240px}}
+@media(max-width:900px){main{width:calc(100% - 14px);padding:12px;border-radius:20px}h1{font-size:clamp(38px,14vw,60px);letter-spacing:-1px}.grid,.summary{grid-template-columns:1fr}.controls{flex-direction:column;align-items:stretch}input,button{width:100%;min-width:0}.panel{padding:14px;border-radius:18px}table{min-width:760px}.box{padding:10px}}
 </style>
 </head>
 <body>
 <header>
-<h1>Бот UWU 3.0</h1>
-<div class="subtitle">LIVE Prime ТБ55 + Pro Division стратегия падения ТМ на 9+ • демо-банк</div>
+<h1>BOT UWU 3.0</h1>
+<div class="subtitle">Реальный LIVE по МСК • без фейковых матчей • стабильный JSON backend</div>
 </header>
 
 <main>
@@ -68,8 +63,8 @@ a{color:#93c5fd;font-weight:900}
 </section>
 
 <section class="panel live">
-<div class="title">Постоянный LIVE скан</div>
-<div class="small">После запуска работает постоянно каждые 1 секунду. Prime Division ищет наличие ТБ55. Pro Division отслеживает стратегию: запомнить максимальный ТМ в перерыве перед 1/2/3 четвертью, затем при падении текущего максимального ТМ на 9+ очков — зелёная сирена, демо-ставка 500 ₽ на ТБ текущего live-тотала.</div>
+<div class="title">Постоянный LIVE скан по МСК</div>
+<div class="small">Работает каждую 1 секунду до ручной остановки. Сигналы создаются только из реального ответа api-sport.ru. Если API не отдаёт live-счёт или live-линии ТБ/ТМ, сайт покажет диагностику, а не будет придумывать данные.</div>
 <div class="controls">
 <button id="startLiveBtn">Запустить LIVE постоянно</button>
 <button id="stopLiveBtn">Остановить LIVE</button>
@@ -84,7 +79,7 @@ a{color:#93c5fd;font-weight:900}
 
 <section class="panel">
 <div class="title">Матчи в реальном времени по МСК</div>
-<div class="small">Окно обновляется вместе с LIVE-режимом каждую 1 секунду. Показывает только реальные live-матчи, которые вернул api-sport.ru: команды, текущий счёт, период, статус и время по Москве. Если API не отдаёт счёт или live-линию — сайт это честно покажет.</div>
+<div class="small">Только реальные live-матчи из API: время МСК, лига, команды, период, текущий счёт и статус. Если API вернул матч без счёта, будет указано «API не дал счёт».</div>
 <div class="box">
 <table>
 <thead><tr><th>Время МСК</th><th>Лига</th><th>Команды</th><th>Период</th><th>Текущий счёт</th><th>Статус</th><th>Источник</th></tr></thead>
@@ -95,14 +90,14 @@ a{color:#93c5fd;font-weight:900}
 
 <section class="panel pro">
 <div class="title">Pro Division — демо-ставки стратегии</div>
-<div class="small">Здесь фиксируются все Pro-сигналы, baseline ТМ в перерыве, текущий ТМ, падение, ставка 500 ₽ и расчёт после окончания четверти.</div>
-<div class="summary">
+<div class="small">Запоминает максимальный ТМ в перерыве перед 1/2/3 четвертью. Когда текущий максимальный ТМ падает на 9+ очков — зелёная сирена и демо-ставка 500 ₽.</div>
+<section class="summary">
+<div class="card">Демо банк<b id="demoBank">10 000 ₽</b></div>
 <div class="card">Активных ставок<b id="activeBets">0</b></div>
 <div class="card">Закрытых ставок<b id="settledBets">0</b></div>
 <div class="card">Выиграли<b id="wonBets">0</b></div>
 <div class="card">Проиграли<b id="lostBets">0</b></div>
-<div class="card">Pro прибыль<b id="proProfit">0 ₽</b></div>
-</div>
+</section>
 <div class="box">
 <table>
 <thead><tr><th>Время</th><th>Матч</th><th>Четверть</th><th>Baseline ТМ</th><th>Текущий ТМ</th><th>Падение</th><th>Ставка</th><th>Кэф</th><th>Статус</th><th>Банк</th></tr></thead>
@@ -113,7 +108,6 @@ a{color:#93c5fd;font-weight:900}
 
 <section class="panel">
 <div class="title">Скан итогов предыдущих дней</div>
-<div class="small">Исторический скан через /api/results-scan. Четверти одного матча объединяются в одну строку.</div>
 <div class="controls">
 <input id="bankInput" type="number" value="10000" min="0">
 <input id="dateInput" type="date">
@@ -132,24 +126,6 @@ a{color:#93c5fd;font-weight:900}
 <div class="card">Строк<b id="rowsCount">0</b></div>
 </section>
 
-<section class="chart-grid">
-<div class="chart"><canvas id="quarterChart" width="700" height="300"></canvas></div>
-<div class="chart"><canvas id="teamChart" width="700" height="300"></canvas></div>
-</section>
-
-<section class="chart-grid">
-<div class="chart"><canvas id="bankChart" width="700" height="300"></canvas></div>
-<div class="box">
-<div class="title">Лучшие / худшие команды</div>
-<div id="bestWorstBox"><div class="empty">Появится после скана.</div></div>
-</div>
-</section>
-
-<section class="box">
-<div class="title">Рейтинг команд по пробитию тотала</div>
-<div id="rankingBox"><div class="empty">Рейтинг появится после скана.</div></div>
-</section>
-
 <section class="box" id="rawMatchesBox" style="display:none;">
 <div class="title">Матчи найдены, но счёт по четвертям не найден</div>
 <div id="rawMatchesList"></div>
@@ -166,129 +142,47 @@ a{color:#93c5fd;font-weight:900}
 
 <script>
 const $=id=>document.getElementById(id);
-const els={server:$('serverState'),key:$('keyState'),liveApiCount:$('liveApiCount'),liveCount:$('liveCount'),finalBank:$('finalBank'),start:$('startLiveBtn'),stop:$('stopLiveBtn'),sound:$('soundBtn'),testPrime:$('testPrimeBtn'),testPro:$('testProBtn'),clearLive:$('clearLiveBtn'),liveStatus:$('liveStatus'),liveSignals:$('liveSignals'),bank:$('bankInput'),date:$('dateInput'),health:$('healthBtn'),scan:$('scanBtn'),demo:$('demoBtn'),status:$('status'),wins:$('wins'),losses:$('losses'),rate:$('rate'),profit:$('profit'),rowsCount:$('rowsCount'),table:$('tableBody'),rawBox:$('rawMatchesBox'),rawList:$('rawMatchesList'),ranking:$('rankingBox'),bestWorst:$('bestWorstBox'),quarterChart:$('quarterChart'),teamChart:$('teamChart'),bankChart:$('bankChart'),activeBets:$('activeBets'),settledBets:$('settledBets'),wonBets:$('wonBets'),lostBets:$('lostBets'),proProfit:$('proProfit'),proBetsTable:$('proBetsTable'),realtimeMatchesTable:$('realtimeMatchesTable')};
+const els={server:$('serverState'),key:$('keyState'),liveApiCount:$('liveApiCount'),liveCount:$('liveCount'),start:$('startLiveBtn'),stop:$('stopLiveBtn'),sound:$('soundBtn'),testPrime:$('testPrimeBtn'),testPro:$('testProBtn'),clearLive:$('clearLiveBtn'),liveStatus:$('liveStatus'),liveSignals:$('liveSignals'),realtime:$('realtimeMatchesTable'),demoBank:$('demoBank'),activeBets:$('activeBets'),settledBets:$('settledBets'),wonBets:$('wonBets'),lostBets:$('lostBets'),proBetsTable:$('proBetsTable'),bank:$('bankInput'),date:$('dateInput'),health:$('healthBtn'),scan:$('scanBtn'),demo:$('demoBtn'),status:$('status'),wins:$('wins'),losses:$('losses'),rate:$('rate'),profit:$('profit'),rowsCount:$('rowsCount'),rawBox:$('rawMatchesBox'),rawList:$('rawMatchesList'),table:$('tableBody')};
 els.date.value=new Date().toISOString().slice(0,10);
+
 let liveRunning=false,liveTimer=null,liveInFlight=false,liveFailures=0,soundEnabled=false,audioCtx=null,seen=new Set(),liveCount=0;
 let demoBank=10000, proStates={}, proBets=[];
 
 function esc(v){return String(v??'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;")}
 function money(v){return Math.round(Number(v)||0).toLocaleString('ru-RU')+' ₽'}
 function stat(el,msg,type=''){el.className='status '+type;el.textContent=msg}
+function setBank(v){demoBank=Number(v)||10000;els.demoBank.textContent=money(demoBank)}
 function initAudio(){const C=window.AudioContext||window.webkitAudioContext;if(!audioCtx&&C)audioCtx=new C();return audioCtx}
 function playMoney(force=false){if(!soundEnabled&&!force)return;const ctx=initAudio();if(!ctx)return;if(ctx.state==='suspended')ctx.resume();for(let i=0;i<10;i++){const n=ctx.createBufferSource(),b=ctx.createBuffer(1,4096,ctx.sampleRate),d=b.getChannelData(0);for(let j=0;j<d.length;j++)d[j]=(Math.random()*2-1)*.45;n.buffer=b;const f=ctx.createBiquadFilter();f.type='bandpass';f.frequency.value=900+Math.random()*2400;f.Q.value=8;const g=ctx.createGain(),s=ctx.currentTime+i*.045;g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(.55,s+.01);g.gain.exponentialRampToValueAtTime(.0001,s+.18);n.connect(f);f.connect(g);g.connect(ctx.destination);n.start(s);n.stop(s+.2)}}
 async function toggleSound(){soundEnabled=!soundEnabled;if(soundEnabled){const ctx=initAudio();if(ctx&&ctx.state==='suspended')await ctx.resume();els.sound.textContent='Выключить звук денег';playMoney(true)}else els.sound.textContent='Включить звук денег'}
 
-function setDemoBank(v){demoBank=Number(v)||10000}
-function clearLiveSignals(){seen.clear();liveCount=0;els.liveCount.textContent='0';els.liveSignals.innerHTML='<div class="empty">Пока нет live-сигналов.</div>';proStates={};proBets=[];renderProBets();renderRealtimeMatches([]);stat(els.liveStatus,'Сигналы очищены. LIVE '+(liveRunning?'продолжает работать.':'остановлен.'))}
-function signalKey(s){return (s.id||'')+'|'+s.strategy+'|'+s.teamA+'|'+s.teamB+'|'+s.period+'|'+s.total+'|'+s.score}
-function addLiveSignal(s, pro=false){
- const key=signalKey(s); if(seen.has(key))return; seen.add(key); liveCount++; els.liveCount.textContent=liveCount;
- if(liveCount===1)els.liveSignals.innerHTML='';
- const div=document.createElement('div'); div.className=pro?'pro-signal':'live-signal';
- div.innerHTML=`<div class="live-teams">${pro?'<span class="siren">🟢🚨 PRO СТАВКА</span><br>':''}${esc(s.teamA)} — ${esc(s.teamB)}</div><div class="live-meta"><span class="live-pill">🏀 ${esc(s.league||'IPBL')}</span><span class="live-pill">Q${esc(s.period||'LIVE')}</span><span class="live-pill">Счёт: ${esc(s.score||'—')}</span><span class="live-pill">${pro?'ТМ упал: '+esc(s.drop)+' очков':'Есть ТБ '+esc(s.total)}</span><span class="live-pill">Кэф: ${esc(s.odds||'—')}</span></div><div style="margin-top:10px"><a href="${esc(s.sourceUrl||'#')}" target="_blank">Открыть источник</a></div>`;
- els.liveSignals.prepend(div); playMoney();
+function renderRealtime(matches){
+ if(!matches||!matches.length){els.realtime.innerHTML='<tr><td colspan="7"><div class="empty">Сейчас api-sport.ru не вернул live-матчи. LIVE продолжает проверку каждую секунду.</div></td></tr>';return}
+ els.realtime.innerHTML=matches.map(m=>`<tr><td>${esc(m.mskTime||'—')}</td><td>${esc(m.league||'—')}</td><td><b>${esc(m.teamA||'—')} — ${esc(m.teamB||'—')}</b></td><td>${esc(m.period||'LIVE')}</td><td><b>${esc(m.score||'API не дал счёт')}</b></td><td>${esc(m.status||'live')}</td><td><a href="${esc(m.sourceUrl||'#')}" target="_blank">Открыть</a></td></tr>`).join('');
 }
-
+function clearLive(){seen.clear();liveCount=0;els.liveCount.textContent='0';els.liveSignals.innerHTML='<div class="empty">Пока нет live-сигналов.</div>';proStates={};proBets=[];renderProBets();renderRealtime([]);stat(els.liveStatus,'Сигналы очищены. LIVE '+(liveRunning?'продолжает работать.':'остановлен.'))}
+function addSignal(s,pro=false){const key=(s.id||'')+'|'+s.strategy+'|'+s.teamA+'|'+s.teamB+'|'+s.period+'|'+s.total+'|'+s.score;if(seen.has(key))return;seen.add(key);liveCount++;els.liveCount.textContent=liveCount;if(liveCount===1)els.liveSignals.innerHTML='';const div=document.createElement('div');div.className=pro?'pro-signal':'live-signal';div.innerHTML=`<div class="live-teams">${pro?'<span class="siren">🟢🚨 PRO СТАВКА</span><br>':''}${esc(s.teamA)} — ${esc(s.teamB)}</div><div class="live-meta"><span class="live-pill">🏀 ${esc(s.league||'IPBL')}</span><span class="live-pill">Q${esc(s.period||'LIVE')}</span><span class="live-pill">Счёт: ${esc(s.score||'—')}</span><span class="live-pill">${pro?'ТМ упал: '+esc(s.drop):'Есть ТБ '+esc(s.total)}</span><span class="live-pill">Кэф: ${esc(s.odds||'—')}</span></div><div style="margin-top:10px"><a href="${esc(s.sourceUrl||'#')}" target="_blank">Открыть источник</a></div>`;els.liveSignals.prepend(div);playMoney()}
 function proKey(m){return (m.id||'')+'|'+m.teamA+'|'+m.teamB+'|'+m.period}
-function bestUnderLine(m){const unders=(m.markets||[]).filter(x=>String(x.type||'').toUpperCase().includes('TM')||String(x.type||'').toUpperCase().includes('ТМ')||String(x.name||'').toLowerCase().includes('under')||String(x.name||'').toLowerCase().includes('тм')); if(!unders.length)return null; return unders.map(x=>({line:Number(x.line),odds:Number(x.odds||1.75)})).filter(x=>Number.isFinite(x.line)).sort((a,b)=>b.line-a.line)[0]||null}
-function isBreak(m){const st=String(m.status||m.phase||'').toLowerCase();return st.includes('break')||st.includes('перерыв')||st.includes('pause')||st.includes('interval')||m.isBreak===true}
-function isQuarterLive(m){const st=String(m.status||m.phase||'').toLowerCase();return st.includes('live')||st.includes('playing')||st.includes('игра')||m.isLive===true}
-function isQuarterFinished(m){const st=String(m.status||m.phase||'').toLowerCase();return st.includes('finished')||st.includes('ended')||st.includes('заверш')||m.quarterFinished===true}
-function quarterTotal(m){const parts=String(m.score||'').split(':').map(Number); if(parts.length>=2&&Number.isFinite(parts[0])&&Number.isFinite(parts[1]))return parts[0]+parts[1]; return Number(m.qTotal||NaN)}
+function bestTM(m){const arr=(m.markets||[]).filter(x=>x.type==='TM').filter(x=>Number.isFinite(Number(x.line))).sort((a,b)=>Number(b.line)-Number(a.line));return arr[0]||null}
+function stText(m){return String(m.status||'').toLowerCase()}
+function isBreak(m){const s=stText(m);return s.includes('break')||s.includes('перерыв')||s.includes('pause')||m.isBreak}
+function isLive(m){const s=stText(m);return s.includes('live')||s.includes('playing')||s.includes('игра')||m.isLive}
+function isFinished(m){const s=stText(m);return s.includes('finish')||s.includes('ended')||s.includes('заверш')||m.quarterFinished}
+function processPro(matches){for(const m of matches){const q=Number(m.period||m.quarter);if(![1,2,3].includes(q))continue;const u=bestTM(m);if(!u)continue;const key=proKey(m);if(!proStates[key])proStates[key]={baseline:null,betId:null};const st=proStates[key];if(isBreak(m)&&(st.baseline===null||Number(u.line)>Number(st.baseline.line)))st.baseline={line:Number(u.line),odds:Number(u.odds)||1.75};if(st.baseline&&!st.betId&&isLive(m)){const drop=Number((Number(st.baseline.line)-Number(u.line)).toFixed(2));if(drop>=9){const bet={id:key+'|'+Date.now(),time:new Date().toLocaleTimeString('ru-RU',{timeZone:'Europe/Moscow'}),match:`${m.teamA} — ${m.teamB}`,quarter:q,baseline:st.baseline.line,current:u.line,drop,stake:500,odds:Number(u.odds)||1.75,line:u.line,status:'active',result:'Ожидает',bankAfter:demoBank-500};demoBank-=500;st.betId=bet.id;proBets.unshift(bet);setBank(demoBank);addSignal({id:bet.id,strategy:'PRO',teamA:m.teamA,teamB:m.teamB,league:m.league,period:q,score:m.score,total:u.line,odds:bet.odds,drop,sourceUrl:m.sourceUrl},true)}}if(st.betId&&isFinished(m)){const bet=proBets.find(x=>x.id===st.betId&&x.status==='active');if(bet){bet.status='settled';bet.result='Завершена';bet.bankAfter=demoBank}}}renderProBets()}
+function renderProBets(){els.activeBets.textContent=proBets.filter(x=>x.status==='active').length;els.settledBets.textContent=proBets.filter(x=>x.status==='settled').length;els.wonBets.textContent=proBets.filter(x=>x.result==='Пробили').length;els.lostBets.textContent=proBets.filter(x=>x.result==='Не пробили').length;if(!proBets.length){els.proBetsTable.innerHTML='<tr><td colspan="10"><div class="empty">Ставок пока нет.</div></td></tr>';return}els.proBetsTable.innerHTML=proBets.map(b=>`<tr><td>${esc(b.time)}</td><td>${esc(b.match)}</td><td>Q${b.quarter}</td><td>ТМ ${b.baseline}</td><td>ТМ ${b.current}</td><td class="green">${b.drop}</td><td>500 ₽ на ТБ ${b.line}</td><td>${b.odds}</td><td class="yellow">${esc(b.result)}</td><td>${money(b.bankAfter)}</td></tr>`).join('')}
 
-function processProMatches(matches){
- for(const m of matches){
-  if(!String(m.league||'').toLowerCase().includes('pro')) continue;
-  const q=Number(m.period||m.quarter); if(![1,2,3].includes(q)) continue;
-  const key=proKey(m); const under=bestUnderLine(m);
-  if(!under) continue;
-  if(!proStates[key])proStates[key]={baseline:null,betId:null,last:m};
-  const st=proStates[key]; st.last=m;
-  if(isBreak(m) && (st.baseline===null || under.line>st.baseline.line)){st.baseline={line:under.line,odds:under.odds,time:new Date().toLocaleTimeString('ru-RU')}}
-  if(st.baseline && !st.betId && isQuarterLive(m)){
-    const drop=Number((st.baseline.line-under.line).toFixed(2));
-    if(drop>=9){
-      const bet={id:key+'|'+Date.now(),time:new Date().toLocaleTimeString('ru-RU'),match:`${m.teamA} — ${m.teamB}`,teamA:m.teamA,teamB:m.teamB,league:m.league,quarter:q,baseline:st.baseline.line,current:under.line,drop,stake:500,odds:under.odds||1.75,line:under.line,status:'active',result:'Ожидает окончания четверти',bankBefore:demoBank,bankAfter:demoBank,sourceUrl:m.sourceUrl||'#'};
-      demoBank-=500; bet.bankAfter=demoBank; st.betId=bet.id; proBets.unshift(bet); setDemoBank(demoBank); addLiveSignal({id:bet.id,strategy:'PRO_DROP',teamA:m.teamA,teamB:m.teamB,league:m.league,period:q,score:m.score,total:under.line,odds:bet.odds,drop,sourceUrl:bet.sourceUrl},true);
-    }
-  }
-  if(st.betId && isQuarterFinished(m)){
-    const bet=proBets.find(x=>x.id===st.betId&&x.status==='active'); if(bet){
-      const total=quarterTotal(m); bet.finalTotal=total;
-      if(Number.isFinite(total) && total>bet.line){const win=Math.round(bet.stake*bet.odds); demoBank+=win; bet.status='settled'; bet.result='Пробили'; bet.profit=win-bet.stake; bet.bankAfter=demoBank}
-      else{bet.status='settled'; bet.result='Не пробили'; bet.profit=-bet.stake; bet.bankAfter=demoBank}
-      setDemoBank(demoBank);
-    }
-  }
- }
- renderProBets();
-}
-function renderProBets(){
- const active=proBets.filter(x=>x.status==='active').length, settled=proBets.filter(x=>x.status==='settled').length, won=proBets.filter(x=>x.result==='Пробили').length,lost=proBets.filter(x=>x.result==='Не пробили').length,profit=proBets.reduce((s,x)=>s+(x.profit||0),0);
- els.activeBets.textContent=active;els.settledBets.textContent=settled;els.wonBets.textContent=won;els.lostBets.textContent=lost;els.proProfit.textContent=money(profit);
- if(!proBets.length){els.proBetsTable.innerHTML='<tr><td colspan="10"><div class="empty">Ставок пока нет.</div></td></tr>';return}
- els.proBetsTable.innerHTML=proBets.map(b=>`<tr><td>${esc(b.time)}</td><td>${esc(b.match)}</td><td>Q${b.quarter}</td><td>ТМ ${b.baseline}</td><td>ТМ ${b.current}</td><td class="green">${b.drop}</td><td>500 ₽ на ТБ ${b.line}</td><td>${b.odds}</td><td class="${b.result==='Пробили'?'green':b.result==='Не пробили'?'red':'yellow'}">${esc(b.result)}</td><td>${money(b.bankAfter)}</td></tr>`).join('');
-}
-
-
-function renderRealtimeMatches(matches){
- if(!els.realtimeMatchesTable)return;
- if(!matches || !matches.length){
-  els.realtimeMatchesTable.innerHTML='<tr><td colspan="7"><div class="empty">Сейчас api-sport.ru не вернул live-матчи. LIVE продолжает проверку каждую секунду. Данные не подставляются вручную.</div></td></tr>';
-  return;
- }
- els.realtimeMatchesTable.innerHTML=matches.map(m=>`<tr>
-  <td>${esc(m.mskTime||'—')}</td>
-  <td>${esc(m.league||'—')}</td>
-  <td><b>${esc(m.teamA||'—')} — ${esc(m.teamB||'—')}</b></td>
-  <td>${esc(m.period||'LIVE')}</td>
-  <td><b>${esc(m.score||'API не дал счёт')}</b></td>
-  <td>${esc(m.status||'live')}</td>
-  <td><a href="${esc(m.sourceUrl||'#')}" target="_blank">Открыть</a></td>
- </tr>`).join('');
-}
-
-async function pollLiveOnce(){
- if(!liveRunning||liveInFlight)return; liveInFlight=true;
- try{
-  const r=await fetch('/api/live-signals?line=55&ts='+Date.now(),{cache:'no-store'}); const d=await r.json();
-  if(!r.ok||!d.ok)throw new Error(d.error||'LIVE API error');
-  els.liveApiCount.textContent=String(d.apiMatches??0);
-  liveFailures=0; stat(els.liveStatus,'LIVE работает. Реальных матчей API: '+(d.apiMatches??0)+'. Prime сигналов: '+(d.results?.length||0)+'. Pro матчей: '+(d.proMatches?.length||0)+'. '+new Date().toLocaleTimeString('ru-RU'),'ok');
-  renderRealtimeMatches(d.liveMatches||[]);
-  (d.results||[]).forEach(s=>addLiveSignal({...s,strategy:'PRIME_TB'},false));
-  processProMatches(d.proMatches||[]);
- }catch(e){liveFailures++;stat(els.liveStatus,'LIVE продолжает работать. Ошибка №'+liveFailures+': '+e.message,'err')}
- finally{liveInFlight=false}
-}
-function startLive(){liveRunning=true;if(liveTimer)clearInterval(liveTimer);pollLiveOnce();liveTimer=setInterval(pollLiveOnce,1000);els.start.disabled=true;els.stop.disabled=false;stat(els.liveStatus,'LIVE запущен постоянно.','ok')}
+async function pollLive(){if(!liveRunning||liveInFlight)return;liveInFlight=true;try{const r=await fetch('/api/live-signals?line=55&ts='+Date.now(),{cache:'no-store'});const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'LIVE API error');els.liveApiCount.textContent=String(d.apiMatches??0);renderRealtime(d.liveMatches||[]);(d.results||[]).forEach(s=>addSignal({...s,strategy:'PRIME'},false));processPro(d.proMatches||[]);liveFailures=0;stat(els.liveStatus,'LIVE работает по МСК. Реальных матчей API: '+(d.apiMatches??0)+'. Prime сигналов: '+(d.results?.length||0)+'. Pro матчей: '+(d.proMatches?.length||0)+'. Проверка: '+(d.mskTime||new Date().toLocaleTimeString('ru-RU',{timeZone:'Europe/Moscow'})),'ok')}catch(e){liveFailures++;stat(els.liveStatus,'LIVE продолжает работать. Ошибка №'+liveFailures+': '+e.message,'err')}finally{liveInFlight=false}}
+function startLive(){liveRunning=true;if(liveTimer)clearInterval(liveTimer);pollLive();liveTimer=setInterval(pollLive,1000);els.start.disabled=true;els.stop.disabled=false;stat(els.liveStatus,'LIVE запущен постоянно.','ok')}
 function stopLive(){liveRunning=false;if(liveTimer)clearInterval(liveTimer);liveTimer=null;liveInFlight=false;els.start.disabled=false;els.stop.disabled=true;stat(els.liveStatus,'LIVE остановлен вручную.')}
-function testPrime(){addLiveSignal({id:Date.now(),strategy:'PRIME',teamA:'Скорпионс',teamB:'Биверс',league:'IPBL Prime Division',period:2,score:'31:27',total:55,odds:1.75,sourceUrl:'#'},false)}
-function testPro(){const id='demo-pro-'+Date.now();processProMatches([{id,league:'IPBL Pro Division',teamA:'Фэлконс',teamB:'Шаркс',period:2,score:'0:0',status:'break',markets:[{type:'TM',line:50,odds:1.8}],sourceUrl:'#'}]);processProMatches([{id,league:'IPBL Pro Division',teamA:'Фэлконс',teamB:'Шаркс',period:2,score:'10:8',status:'live',markets:[{type:'TM',line:40.5,odds:1.82}],sourceUrl:'#'}]);setTimeout(()=>processProMatches([{id,league:'IPBL Pro Division',teamA:'Фэлконс',teamB:'Шаркс',period:2,score:'23:21',status:'finished',markets:[{type:'TM',line:40.5,odds:1.82}],sourceUrl:'#'}]),3000)}
-
-function seedRand(s){let seed=0;for(let i=0;i<s.length;i++)seed=(seed*31+s.charCodeAt(i))>>>0;return()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296}}
-function normalizeRows(rows){let bank=Number(els.bank.value||10000);return(rows||[]).map((r,i)=>{const qTotal=Number(r.qTotal??r.total??0),targetText=String(r.target||'ТБ55'),target=Number(targetText.replace(/[^0-9.]/g,'')||55),passed=typeof r.passed==='boolean'?r.passed:qTotal>target,profit=passed?375:-500;bank+=profit;return{time:r.time||'—',league:r.league||'—',teamA:r.teamA||'—',teamB:r.teamB||'—',quarter:Number(r.quarter||((i%3)+1)),qScore:r.qScore||'0:0',qTotal,target:targetText,passed,profit,bankAfter:bank,sourceUrl:r.sourceUrl||'#'}})}
-function group(rows){const m=new Map();rows.forEach(r=>{const key=String(r.time).slice(0,16)+'|'+r.league+'|'+[r.teamA,r.teamB].sort().join('-');if(!m.has(key))m.set(key,{...r,rows:[],profit:0});const g=m.get(key);g.rows.push(r);g.profit+=r.profit;g.bankAfter=r.bankAfter});return[...m.values()].map(g=>{let h=0,a=0;g.rows.sort((x,y)=>x.quarter-y.quarter).forEach(r=>{const p=String(r.qScore).split(':').map(Number);h+=p[0]||0;a+=p[1]||0});g.final=h+':'+a;return g})}
-function teamStats(rows){const s={};rows.forEach(r=>[r.teamA,r.teamB].forEach(t=>{if(!s[t])s[t]={team:t,total:0,wins:0,losses:0,percent:0};s[t].total++;if(r.passed)s[t].wins++;else s[t].losses++}));return Object.values(s).map(x=>({...x,percent:x.total?Math.round(x.wins/x.total*100):0})).sort((a,b)=>b.percent-a.percent||b.total-a.total)}
-function render(rows,meta={}){const wins=rows.filter(r=>r.passed).length,losses=rows.length-wins,final=rows.length?rows[rows.length-1].bankAfter:Number(els.bank.value||10000),profit=final-Number(els.bank.value||10000);els.finalBank.textContent=money(demoBank||final);els.wins.textContent=wins;els.losses.textContent=losses;els.rate.textContent=rows.length?Math.round(wins/rows.length*100)+'%':'0%';els.profit.textContent=money(profit);els.rowsCount.textContent=rows.length;if(!rows.length){els.table.innerHTML='<tr><td colspan="9"><div class="empty">Ставочных строк нет.</div></td></tr>';els.ranking.innerHTML='<div class="empty">Рейтинг появится после скана.</div>';els.bestWorst.innerHTML='<div class="empty">Появится после скана.</div>';drawAll(rows);return}els.table.innerHTML=group(rows).map(g=>{const qs=g.rows.map(r=>`<span class="quarter ${r.passed?'win':'lose'}">Q${r.quarter} ${esc(r.qScore)} ${esc(r.target)} ${r.passed?'✔':'✖'} ${r.profit>0?'+':''}${money(r.profit)}</span>`).join('');return`<tr class="match-row"><td>${esc(g.time)}</td><td>${esc(g.league)}</td><td><b>${esc(g.teamA)} — ${esc(g.teamB)}</b></td><td>${qs}</td><td>${esc(g.final)}</td><td>${g.rows.length} ставок</td><td class="${g.profit>=0?'green':'red'}">${g.profit>0?'+':''}${money(g.profit)}</td><td>${money(g.bankAfter)}</td><td><a href="${esc(g.sourceUrl)}" target="_blank">Открыть</a></td></tr>`}).join('');renderTeams(rows);drawAll(rows)}
-function renderTeams(rows){const list=teamStats(rows);els.ranking.innerHTML='<table><thead><tr><th>Команда</th><th>Матчей/четвертей</th><th>Пробили</th><th>Не пробили</th><th>%</th></tr></thead><tbody>'+list.map(x=>`<tr><td>${esc(x.team)}</td><td>${x.total}</td><td>${x.wins}</td><td>${x.losses}</td><td>${x.percent}%</td></tr>`).join('')+'</tbody></table>';const best=list.slice(0,5),worst=[...list].reverse().slice(0,5);els.bestWorst.innerHTML='<div class="grid" style="grid-template-columns:1fr 1fr"><div><h3>Лучшие</h3>'+best.map(x=>`<div class="card team-good">${esc(x.team)}<b>${x.percent}%</b><span>${x.wins}/${x.total}</span></div>`).join('')+'</div><div><h3>Худшие</h3>'+worst.map(x=>`<div class="card team-bad">${esc(x.team)}<b>${x.percent}%</b><span>${x.wins}/${x.total}</span></div>`).join('')+'</div></div>'}
-function drawAll(rows){drawQuarter(rows);drawTeam(rows);drawBank(rows)}
-function baseChart(canvas,title){const ctx=canvas.getContext('2d'),w=canvas.width,h=canvas.height;ctx.clearRect(0,0,w,h);ctx.fillStyle='rgba(255,255,255,.92)';ctx.font='bold 18px Arial';ctx.fillText(title,18,28);return{ctx,w,h}}
-function drawQuarter(rows){const {ctx,w,h}=baseChart(els.quarterChart,'Пробили / не пробили по четвертям');const d=[1,2,3].map(q=>{const a=rows.filter(r=>r.quarter===q);return{q,win:a.filter(r=>r.passed).length,lose:a.filter(r=>!r.passed).length}});const max=Math.max(1,...d.flatMap(x=>[x.win,x.lose])),bottom=h-42,top=52,g=w/3;d.forEach((x,i)=>{const cx=g*i+g/2,bw=48,wh=x.win/max*(bottom-top),lh=x.lose/max*(bottom-top);ctx.fillStyle='rgba(34,197,94,.85)';ctx.fillRect(cx-bw-8,bottom-wh,bw,wh);ctx.fillStyle='rgba(239,68,68,.85)';ctx.fillRect(cx+8,bottom-lh,bw,lh);ctx.fillStyle='#fff';ctx.font='bold 15px Arial';ctx.fillText(String(x.win),cx-bw+10,bottom-wh-8);ctx.fillText(String(x.lose),cx+24,bottom-lh-8);ctx.fillStyle='rgba(255,255,255,.75)';ctx.fillText(x.q+' четверть',cx-40,h-14)})}
-function drawTeam(rows){const {ctx,w,h}=baseChart(els.teamChart,'Топ команд по % пробития');const list=teamStats(rows).slice(0,8),max=100,top=52,bh=20,gap=10;ctx.font='12px Arial';list.forEach((x,i)=>{const y=top+i*(bh+gap);ctx.fillStyle='rgba(255,255,255,.75)';ctx.fillText(x.team,18,y+15);ctx.fillStyle='rgba(34,197,94,.8)';ctx.fillRect(170,y,(w-240)*x.percent/max,bh);ctx.fillStyle='#fff';ctx.fillText(x.percent+'%',180+(w-240)*x.percent/max,y+15)})}
-function drawBank(rows){const {ctx,w,h}=baseChart(els.bankChart,'Движение банка');const start=Number(els.bank.value||10000),vals=[start,...rows.map(r=>r.bankAfter)];if(vals.length<2){ctx.fillStyle='rgba(255,255,255,.75)';ctx.fillText(money(start),18,h-30);return}const min=Math.min(...vals),max=Math.max(...vals),pad=46;ctx.strokeStyle='rgba(96,165,250,.95)';ctx.lineWidth=3;ctx.beginPath();vals.forEach((v,i)=>{const x=pad+i*(w-pad*2)/(vals.length-1),y=h-pad-(v-min)/(Math.max(1,max-min))*(h-pad*2);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y)});ctx.stroke();ctx.fillStyle='#fff';ctx.font='13px Arial';ctx.fillText(money(max),18,54);ctx.fillText(money(min),18,h-20)}
-
-function renderRawMatches(rawMatches, calculatedRows){
- if(!els.rawBox||!els.rawList)return;
- if(calculatedRows>0 || !rawMatches || !rawMatches.length){els.rawBox.style.display='none';els.rawList.innerHTML='';return}
- els.rawBox.style.display='block';
- els.rawList.innerHTML='<div class="small" style="margin-bottom:10px;">API вернул матчи, но в ответе не найдено полей со счётом по четвертям. Я не придумываю четверти, поэтому ставки не считаются, пока feed не отдаст period/quarter scores.</div><table><thead><tr><th>Время</th><th>Лига</th><th>Команды</th><th>Статус</th><th>Источник</th></tr></thead><tbody>'+rawMatches.map(m=>`<tr><td>${esc(m.time||'—')}</td><td>${esc(m.league||'—')}</td><td>${esc(m.teamA||'—')} — ${esc(m.teamB||'—')}</td><td>${esc(m.status||'нет четвертей в API')}</td><td><a href="${esc(m.sourceUrl||'#')}" target="_blank">Открыть</a></td></tr>`).join('')+'</tbody></table>';
-}
-
-async function health(){try{stat(els.status,'Проверяю API...');const r=await fetch('/api/health'),d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'API error');els.server.textContent='Онлайн';els.key.textContent=d.hasKey?'Есть':'Нет';stat(els.status,'API работает.','ok')}catch(e){els.server.textContent='Ошибка';stat(els.status,e.message,'err')}}
-async function scan(){try{stat(els.status,'Сканирую...');const r=await fetch('/api/results-scan?date='+encodeURIComponent(els.date.value));const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'Ошибка скана');const rows=normalizeRows(d.results||[]);render(rows,d);renderRawMatches(d.rawMatches||[], rows.length);stat(els.status,'Готово. API матчей: '+(d.apiMatches??0)+'. Рассчитанных строк: '+rows.length+'. Без четвертей: '+((d.rawMatches||[]).length),'ok')}catch(e){stat(els.status,e.message,'err');render([],{})}}
-function demo(){const rand=seedRand(els.date.value),teams=['Скорпионс','Биверс','Барракудас','Хаскис','Беарз','Рейвенс','Пираньяс','Октопус'],rows=[];for(let i=0;i<16;i++){const a=teams[Math.floor(rand()*teams.length)];let b=teams[Math.floor(rand()*teams.length)];if(a===b)b=teams[(teams.indexOf(a)+1)%teams.length];const time=String(10+i).padStart(2,'0')+':'+String(Math.floor(rand()*60)).padStart(2,'0');for(let q=1;q<=3;q++){const total=42+Math.floor(rand()*26),h=Math.floor(total*(.42+rand()*.22)),aw=total-h;rows.push({time,league:'IPBL Prime Division',teamA:a,teamB:b,quarter:q,qScore:h+':'+aw,qTotal:total,target:'ТБ55',passed:total>55,sourceUrl:'#'})}}render(normalizeRows(rows));stat(els.status,'Демо для даты '+els.date.value,'ok')}
-els.sound.onclick=toggleSound;els.start.onclick=startLive;els.stop.onclick=stopLive;els.testPrime.onclick=testPrime;els.testPro.onclick=testPro;els.clearLive.onclick=clearLiveSignals;els.health.onclick=health;els.scan.onclick=scan;els.demo.onclick=demo;els.stop.disabled=true;setDemoBank(Number(els.bank.value||10000));els.liveApiCount.textContent='0';health();render([]);renderProBets();
+function testPrime(){addSignal({id:Date.now(),strategy:'PRIME',teamA:'Скорпионс',teamB:'Биверс',league:'IPBL Prime Division',period:2,score:'31:27',total:55,odds:1.75,sourceUrl:'#'},false)}
+function testPro(){processPro([{id:'demo'+Date.now(),league:'IPBL Pro Division',teamA:'Фэлконс',teamB:'Шаркс',period:2,score:'0:0',status:'break',markets:[{type:'TM',line:50,odds:1.8}],sourceUrl:'#'}]);processPro([{id:'demo'+Date.now(),league:'IPBL Pro Division',teamA:'Фэлконс',teamB:'Шаркс',period:2,score:'10:8',status:'live',markets:[{type:'TM',line:40.5,odds:1.82}],sourceUrl:'#'}])}
+function render(rows){const wins=rows.filter(r=>r.passed).length,losses=rows.length-wins,final=rows.length?rows[rows.length-1].bankAfter:Number(els.bank.value||10000),profit=final-Number(els.bank.value||10000);els.wins.textContent=wins;els.losses.textContent=losses;els.rate.textContent=rows.length?Math.round(wins/rows.length*100)+'%':'0%';els.profit.textContent=money(profit);els.rowsCount.textContent=rows.length;if(!rows.length){els.table.innerHTML='<tr><td colspan="9"><div class="empty">Ставочных строк нет.</div></td></tr>';return}els.table.innerHTML=rows.map(r=>`<tr><td>${esc(r.time)}</td><td>${esc(r.league)}</td><td><b>${esc(r.teamA)} — ${esc(r.teamB)}</b></td><td><span class="quarter ${r.passed?'win':'lose'}">Q${r.quarter} ${esc(r.qScore)} ${esc(r.target)}</span></td><td>${esc(r.qScore)}</td><td>1</td><td class="${r.passed?'green':'red'}">${r.profit>0?'+':''}${money(r.profit)}</td><td>${money(r.bankAfter)}</td><td><a href="${esc(r.sourceUrl||'#')}" target="_blank">Открыть</a></td></tr>`).join('')}
+function normalizeRows(rows){let bank=Number(els.bank.value||10000);return(rows||[]).map((r,i)=>{const qTotal=Number(r.qTotal??r.total??0),targetText=String(r.target||'ТБ55'),target=Number(targetText.replace(/[^0-9.]/g,'')||55),passed=typeof r.passed==='boolean'?r.passed:qTotal>target,profit=passed?375:-500;bank+=profit;return{...r,passed,profit,bankAfter:bank}})}
+function renderRaw(raw,rows){if(rows>0||!raw||!raw.length){els.rawBox.style.display='none';return}els.rawBox.style.display='block';els.rawList.innerHTML='<div class="small">API вернул матчи, но не дал счёт по четвертям. Ставки не считаются без period/quarter scores.</div><table><tbody>'+raw.map(m=>`<tr><td>${esc(m.time)}</td><td>${esc(m.league)}</td><td>${esc(m.teamA)} — ${esc(m.teamB)}</td><td>${esc(m.status)}</td></tr>`).join('')+'</tbody></table>'}
+async function health(){try{stat(els.status,'Проверяю API...');const r=await fetch('/api/health');const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'API error');els.server.textContent='Онлайн';els.key.textContent=d.hasKey?'Есть':'Нет';stat(els.status,'API работает. Спортов в API: '+(d.sportsCount??0),'ok')}catch(e){els.server.textContent='Ошибка';stat(els.status,e.message,'err')}}
+async function scan(){try{stat(els.status,'Сканирую...');const r=await fetch('/api/results-scan?date='+encodeURIComponent(els.date.value));const d=await r.json();if(!r.ok||!d.ok)throw new Error(d.error||'Ошибка скана');const rows=normalizeRows(d.results||[]);render(rows);renderRaw(d.rawMatches||[],rows.length);stat(els.status,'Готово. API матчей: '+(d.apiMatches??0)+'. Рассчитанных строк: '+rows.length+'.','ok')}catch(e){stat(els.status,e.message,'err');render([])}}
+function demo(){const teams=['Скорпионс','Биверс','Барракудас','Хаскис'];let rows=[];for(let i=0;i<12;i++){const total=45+(i*7)%24,h=Math.floor(total*.5),a=total-h;rows.push({time:'12:'+String(i).padStart(2,'0'),league:'IPBL Prime Division',teamA:teams[i%4],teamB:teams[(i+1)%4],quarter:(i%3)+1,qScore:h+':'+a,qTotal:total,target:'ТБ55',sourceUrl:'#'})}render(normalizeRows(rows));stat(els.status,'Демо отчёт показан.','ok')}
+els.start.onclick=startLive;els.stop.onclick=stopLive;els.sound.onclick=toggleSound;els.testPrime.onclick=testPrime;els.testPro.onclick=testPro;els.clearLive.onclick=clearLive;els.health.onclick=health;els.scan.onclick=scan;els.demo.onclick=demo;els.stop.disabled=true;setBank(10000);health();render([]);renderProBets();
 </script>
 </body>
 </html>

@@ -1,2 +1,2 @@
 const {API_KEY,getSports}=require('./_lib');
-module.exports=async(req,res)=>{try{let sportsCount=0;if(API_KEY){try{sportsCount=(await getSports()).length}catch{}}res.status(200).json({ok:true,provider:'api-sport.ru',hasKey:Boolean(API_KEY),resultsFeedConnected:Boolean(API_KEY),sportsCount})}catch(e){res.status(e.status||500).json({ok:false,error:e.message})}};
+module.exports=async(req,res)=>{res.setHeader('Content-Type','application/json');try{let sportsCount=0;if(API_KEY){try{sportsCount=(await getSports()).length}catch{}}res.status(200).json({ok:true,hasKey:Boolean(API_KEY),sportsCount})}catch(e){res.status(e.status||500).json({ok:false,error:e.message})}};
