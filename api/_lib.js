@@ -35,9 +35,25 @@ function markets(m){
  return list
 }
 function scorePeriods(m){
- const out=[];const arrs=[pick(m,['periods']),pick(m,['quarters']),pick(m,['scores.periods']),pick(m,['score.periods']),pick(m,['periodScores'])].filter(Array.isArray);
- for(const arr of arrs){arr.slice(0,3).forEach((p,i)=>{let h=parseNum(pick(p,['home','homeScore','h'])),a=parseNum(pick(p,['away','awayScore','a']));const st=pick(p,['score','value'],'');const mm=String(st).match(/(\d+)\s*[:-]\s*(\d+)/);if((!Number.isFinite(h)||!Number.isFinite(a))&&mm){h=Number(mm[1]);a=Number(mm[2])}if(Number.isFinite(h)&&Number.isFinite(a))out.push({quarter:parseNum(pick(p,['quarter','period','number'],i+1))||i+1,home:h,away:a})})}
- return out
+ const out=[];
+ const arrs=[pick(m,['periods']),pick(m,['quarters']),pick(m,['scores.periods']),pick(m,['score.periods']),pick(m,['periodScores']),pick(m,['period_scores'])].filter(Array.isArray);
+ for(const arr of arrs){
+  arr.slice(0,3).forEach((p,i)=>{
+   let h=parseNum(pick(p,['home','homeScore','h','scoreHome','home_score'])),a=parseNum(pick(p,['away','awayScore','a','scoreAway','away_score']));
+   const st=pick(p,['score','value','result'],'');const mm=String(st).match(/(\d+)\s*[:-]\s*(\d+)/);
+   if((!Number.isFinite(h)||!Number.isFinite(a))&&mm){h=Number(mm[1]);a=Number(mm[2])}
+   if(Number.isFinite(h)&&Number.isFinite(a))out.push({quarter:parseNum(pick(p,['quarter','period','number'],i+1))||i+1,home:h,away:a})
+  })
+ }
+ // object formats: scores.home.q1 / scores.away.q1, score.period1.home, etc.
+ for(let q=1;q<=3;q++){
+  const h=parseNum(pick(m,[`scores.home.q${q}`,`scores.home.quarter${q}`,`scores.home.period${q}`,`score.home.q${q}`,`homeScore.q${q}`,`homeScore.period${q}`,`q${q}Home`,`period${q}.home`,`quarter${q}.home`]));
+  const a=parseNum(pick(m,[`scores.away.q${q}`,`scores.away.quarter${q}`,`scores.away.period${q}`,`score.away.q${q}`,`awayScore.q${q}`,`awayScore.period${q}`,`q${q}Away`,`period${q}.away`,`quarter${q}.away`]));
+  if(Number.isFinite(h)&&Number.isFinite(a))out.push({quarter:q,home:h,away:a})
+ }
+ const byQ=new Map();
+ out.forEach(x=>{if(!byQ.has(x.quarter))byQ.set(x.quarter,x)});
+ return [...byQ.values()].sort((a,b)=>a.quarter-b.quarter)
 }
 function matchToRows(m){
  if(!isIpbl(m))return[];const prime=isPrime(m),pro=isPro(m);if(!prime&&!pro)return[];const a=team(m,'home'),b=team(m,'away');if(prime&&!targetPrime(a,b))return[];
@@ -61,4 +77,18 @@ async function loadMatches(date,{live=false}={}){
  }
  return{slugs,attempts,matches}
 }
-module.exports={API_KEY,getSports,loadMatches,matchToRows,livePrimeSignal,liveProMatch};
+
+function rawMatchInfo(m){
+ const a=team(m,'home'), b=team(m,'away');
+ return {
+  id: pick(m,['id','matchId','eventId'],''),
+  time: pick(m,['time','date','startTime','startTimestamp'],'—'),
+  league: getLeague(m)||'—',
+  teamA:a||'—',
+  teamB:b||'—',
+  status: status(m)||'нет счёта по четвертям',
+  sourceUrl: source(m)
+ }
+}
+
+module.exports={API_KEY,getSports,loadMatches,matchToRows,livePrimeSignal,liveProMatch,rawMatchInfo,isIpbl,isPrime,isPro};
