@@ -1,5 +1,5 @@
 import { apiFetch, arr, pick, norm } from "./_common.js";
-export const ENDPOINTS=["/live","/matches/live","/events/live","/basketball/live","/basketball/matches/live","/matches","/events","/basketball/matches","/basketball/events"];
+export const HIST_ENDPOINTS=["/matches","/events","/basketball/matches","/basketball/events","/basketball-3x3/matches","/basketball3x3/matches"];
 const PRIME=["скорпионс","биверс","барракудас","хаскис","беарз","рейвенс","пираньяс","октопус"];
 export function rowsFromMatches(matches,{live=false,line=55}={}){
  const rows=[];
@@ -14,11 +14,11 @@ export function rowsFromMatches(matches,{live=false,line=55}={}){
   const sourceUrl=pick(m,["sourceUrl","matchUrl","eventUrl","url","link"],null)||("https://www.google.com/search?q="+encodeURIComponent(`${teamA} ${teamB} ${league} результат`));
   const period=pick(m,["period","quarter","currentPeriod","status.period"],"LIVE");
   const score=pick(m,["score","currentScore","scores.current"],"—");
-  const totals=[pick(m,["total","line","market.total","markets.total"],null)];
-  const markets=pick(m,["markets","odds","bets"],[]);
-  if(Array.isArray(markets)) markets.forEach(x=>totals.push(pick(x,["total","line","value","name"],null)));
-  const hasLine=totals.some(v=>String(v).includes(String(line))||Math.abs(Number(String(v).replace(/[^0-9.]/g,''))-Number(line))<0.01);
   if(live){
+    const totals=[pick(m,["total","line","market.total","markets.total"],null)];
+    const markets=pick(m,["markets","odds","bets"],[]);
+    if(Array.isArray(markets)) markets.forEach(x=>totals.push(pick(x,["total","line","value","name"],null)));
+    const hasLine=totals.some(v=>String(v).includes(String(line))||Math.abs(Number(String(v).replace(/[^0-9.]/g,''))-Number(line))<0.01);
     if(!hasLine) continue;
     rows.push({id:pick(m,["id","eventId","matchId"],`${teamA}-${teamB}-${Date.now()}`),league,teamA,teamB,period,score,total:line,odds:pick(m,["odds","coefficient","price"],1.75),sourceUrl});
   } else {
@@ -28,9 +28,9 @@ export function rowsFromMatches(matches,{live=false,line=55}={}){
  }
  return rows;
 }
-export async function loadAny(params={},onlyLive=false){
+export async function loadHistorical(params={}){
  let last;
- for(const ep of ENDPOINTS.filter(e=>onlyLive?e.includes("live"):true)){
+ for(const ep of HIST_ENDPOINTS){
    try{const data=await apiFetch(ep,params);const matches=arr(data);if(Array.isArray(matches))return{endpoint:ep,matches}}catch(e){last=e}
  }
  throw last||new Error("Не найден рабочий endpoint")
